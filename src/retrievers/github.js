@@ -34,7 +34,7 @@ Github.prototype.retrieve = function (callback) {
 
     options.host = API_BASE;
     options.path = util.format(API_REPOSITORIES, config.user);
-    options.auth = process.env.GITHUB_OAUTH_TOKEN + ':x-oauth-basic';
+    options.auth = config.token + ':x-oauth-basic';
     options.headers = {};
     options.headers['User-Agent'] = config.user;
 

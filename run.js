@@ -2,8 +2,9 @@
 
 var Github = require('./src/retrievers/github');
 var github = new Github({
-    user: 'minond',
-    since: new Date('2014-06-08 00:00:00'),
+    user: process.env.GITHUB_OAUTH_USER,
+    token: process.env.GITHUB_OAUTH_TOKEN,
+    since: new Date('2014-06-11 00:00:00'),
     until: new Date('2014-06-11 23:59:00')
 });
 
@@ -21,6 +22,10 @@ github.on('error', function () {
 
 github.on('data', function (repo, commits) {
     console.log('%s, %s commits', repo.name, commits.length);
+    // console.log(commits);
+
+    // if (commits.length)
+    //     console.log(commits[0].commit.committer.date);
 });
 
 github.run();
