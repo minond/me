@@ -1,13 +1,15 @@
 'use strict';
 
 var URL_BASE = 'api.github.com',
-    URL_COMMITS = '/repos/${ user.username }/${ repo.name }/commits?author=${ user.username }&since=${ since.toISOString() }&until=${ until.toISOString() }',
-    URL_REPOSITORIES = '/users/${ user.username }/repos';
+    URL_REPOSITORIES = '/users/${ user.username }/repos',
+    URL_COMMITS = '/repos/${ user.username }/${ repo.name }/commits?' +
+        'author=${ user.username }&' +
+        'since=${ since.toISOString() }&' +
+        'until=${ until.toISOString() }';
 
 var Q = require('q'),
     lodash = require('lodash'),
-    https = require('https'),
-    util = require('util');
+    https = require('https');
 
 /**
  * returns a function that joins a list of buffers, json decodes that, then
