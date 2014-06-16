@@ -12,32 +12,39 @@ var github = new Github(
 );
 
 console.log('getting commits from %s to %s', since, until);
+console.log('fetching repositories for %s', github.user.username);
 github.repos().then(function (repos) {
-    var data = {};
+    var repo_list = {};
 
     repos.forEach(function (repo) {
-        data[ repo.id ] = {
+        repo_list[ repo.id ] = {
             name: repo.name,
             full_name: repo.full_name,
             url: repo.html_url
         };
     });
 
-    console.log(data);
-
     repos.forEach(function (repo) {
+        console.log('fetching commits for %s', repo.full_name);
         github.commits(repo, since, until).then(function (commits) {
-            var data = [];
+            var commit_list = [];
 
             commits.forEach(function (commit) {
-                data.push({
+                commit_list.push({
                     sha: commit.sha,
                     url: commit.html_url,
+                    message: commit.commit.message,
+                    date: commit.commit.author.date,
                     repo: repo.id
                 });
             });
 
-            console.log(data);
+            if (commit_list.length) {
+                console.log('saving %s commit(s) for %s', commit_list.length, repo.full_name);
+                console.log(commit_list);
+            } else {
+                console.log('no new commits for %s', repo.full_name);
+            }
         });
     });
 });
