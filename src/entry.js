@@ -96,6 +96,10 @@ Entry.SCHEMA = {
  * @type {Object}
  */
 Entry.INFO = {
+    weather: {
+        type: Entry.SCHEMA.TYPES.ENVIRONMENT,
+        source: 'msn.com'
+    },
     commit: {
         type: Entry.SCHEMA.TYPES.ACTION,
         source: 'github.com'

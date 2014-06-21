@@ -1,9 +1,11 @@
 'use strict';
 
 var Github = require('./src/sources/github'),
+    weather = require('weather-js'),
     mongojs = require('mongojs');
 
-var get_github_data = require('./src/getters/github');
+var get_github_data = require('./src/getters/github'),
+    get_weather_data = require('./src/getters/weather');
 
 
 // var db = mongojs('me', ['data']);
@@ -24,9 +26,6 @@ get_github_data({}, github, {
     until: new Date('2014-06-20')
 });
 
-// var weather = require('weather-js');
-// weather.find({ search: 'Provo, UT', degreeType: 'F' }, function(err, data) {
-//     if (!err) {
-//         console.log(data);
-//     }
-// });
+get_weather_data({}, weather, {
+    search: 'Provo, UT'
+});
