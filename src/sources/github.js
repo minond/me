@@ -2,6 +2,7 @@
 
 var URL_BASE = 'api.github.com',
     URL_REPOSITORIES = '/users/${ user.username }/repos',
+    URL_COMMIT = '/repos/${ user.username }/${ repo.name }/commits/${ commit.sha }',
     URL_COMMITS = '/repos/${ user.username }/${ repo.name }/commits?' +
         'author=${ user.username }&' +
         'since=${ since.toISOString() }&' +
@@ -26,6 +27,42 @@ function resolve_buffers (deferred, buffers) {
         deferred.resolve(joined);
     };
 }
+
+/**
+ * generates an api call method
+ * @parma {string} url the end point (not including the base)
+ * @param {Array} [arglist] optional arguments passed into the method and req
+ * @return {Function}
+ */
+function api_request (url, arglist) {
+    arglist = arglist || [];
+
+    function fields (args) {
+        var data = {};
+
+        lodash.each(args, function (val, index) {
+            data[ arglist[ index ] ] = val;
+        });
+
+        return data;
+    }
+
+    return function () {
+        var deferred = Q.defer(),
+            options = this.options(url, fields(arguments));
+
+        https.get(options, function (res) {
+            var buffers = [];
+
+            res.on('data', buffers.push.bind(buffers));
+            res.on('end', resolve_buffers(deferred, buffers));
+        }).on('error', function () {
+            deferred.reject(new Error('Error getting ' + options.path));
+        });
+
+        return deferred.promise;
+    };
+};
 
 /**
  * @param {string} username
@@ -70,21 +107,7 @@ Github.prototype.options = function (path, fields) {
  * @method repos
  * @return {Q.Promise}
  */
-Github.prototype.repos = function () {
-    var deferred = Q.defer(),
-        options = this.options(URL_REPOSITORIES);
-
-    https.get(options, function (res) {
-        var buffers = [];
-
-        res.on('data', buffers.push.bind(buffers));
-        res.on('end', resolve_buffers(deferred, buffers));
-    }).on('error', function () {
-        deferred.reject(new Error('Error getting repositories'));
-    });
-
-    return deferred.promise;
-};
+Github.prototype.repos = api_request(URL_REPOSITORIES);
 
 /**
  * gets commits for repo within time period
@@ -94,24 +117,15 @@ Github.prototype.repos = function () {
  * @param {Date} [until]
  * @return {Q.Promise}
  */
-Github.prototype.commits = function (repo, since, until) {
-    var deferred = Q.defer(),
-        options = this.options(URL_COMMITS, {
-            repo: repo,
-            since: since || new Date(),
-            until: until || new Date()
-        });
+Github.prototype.commits = api_request(URL_COMMITS, ['repo', 'since', 'until']);
 
-    https.get(options, function (res) {
-        var buffers = [];
-
-        res.on('data', buffers.push.bind(buffers));
-        res.on('end', resolve_buffers(deferred, buffers));
-    }).on('error', function () {
-        deferred.reject(new Error('Error getting commits for ' + repo.name));
-    });
-
-    return deferred.promise;
-};
+/**
+ * gets a single commit
+ * @method commit
+ * @param {Object} repo
+ * @param {Object} commit
+ * @return {Q.Promise}
+ */
+Github.prototype.commit = api_request(URL_COMMIT, ['repo', 'commit']);
 
 module.exports = Github;

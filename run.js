@@ -1,10 +1,20 @@
 'use strict';
 
-var Github = require('./src/sources/github');
+var Github = require('./src/sources/github'),
+    mongojs = require('mongojs'),
+    mime = require('mime');
 
-var now = new Date(),
-    since = new Date(now.setHours(0, 0, 0)),
-    until = new Date(now.setHours(24, 0, 0));
+// var db = mongojs('me', ['data']);
+// db.data.insert({c:true});
+// db.data.find(function () {
+//     console.log(arguments);
+//     db.close();
+// });
+// console.log(db.data)
+
+var now = new Date('2014-06-12'),
+    since = new Date('2014-06-10'),
+    until = new Date('2014-06-20');
 
 var github = new Github(
     process.env.GITHUB_OAUTH_USER,
@@ -14,37 +24,39 @@ var github = new Github(
 console.log('getting commits from %s to %s', since, until);
 console.log('fetching repositories for %s', github.user.username);
 github.repos().then(function (repos) {
-    var repo_list = {};
-
-    repos.forEach(function (repo) {
-        repo_list[ repo.id ] = {
-            name: repo.name,
-            full_name: repo.full_name,
-            url: repo.html_url
-        };
-    });
-
     repos.forEach(function (repo) {
         console.log('fetching commits for %s', repo.full_name);
         github.commits(repo, since, until).then(function (commits) {
-            var commit_list = [];
+            var commitlist = {};
 
             commits.forEach(function (commit) {
-                commit_list.push({
-                    sha: commit.sha,
-                    url: commit.html_url,
-                    message: commit.commit.message,
-                    date: commit.commit.author.date,
-                    repo: repo.id
+                github.commit(repo, commit).then(function (commit) {
+                    var files = [];
+
+                    commit.files.forEach(function (file) {
+                        files.push({
+                            name: file.filename,
+                            type: mime.lookup(file.filename)
+                        });
+                    });
+
+                    commitlist[ commit.sha ] = {
+                        url: commit.html_url,
+                        message: commit.commit.message,
+                        dtdate: commit.commit.author.date,
+                        stats: commit.stats,
+                        files: files,
+                        repository: {
+                            id: repo.id,
+                            name: repo.name,
+                            full_name: repo.full_name,
+                            url: repo.html_url
+                        }
+                    };
+
+                    console.log(commitlist[ commit.sha ]);
                 });
             });
-
-            if (commit_list.length) {
-                console.log('saving %s commit(s) for %s', commit_list.length, repo.full_name);
-                console.log(commit_list);
-            } else {
-                console.log('no new commits for %s', repo.full_name);
-            }
         });
     });
 });
