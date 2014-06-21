@@ -1,6 +1,76 @@
 'use strict';
 
 /**
+ * {
+ *     "schema": {
+ *         "label": "a unique identifier of this type of entry",
+ *         "type": "type of data",
+ *         "source": "where I'm getting this data from",
+ *         "dtstamp_since": "data covers the time period from",
+ *         "dtstamp_until": "data covers the time period to",
+ *         "dtstamp": "data is on this time"
+ *     }
+ *
+ *     "types": {
+ *         "environment": "things around me I cannot control",
+ *         "action": "things I do",
+ *         "metadata": "information/data about information/data"
+ *     }
+ *
+ *     "examples": [
+ *         {
+ *             "label": "weather",
+ *             "type": "environment",
+ *             "source": "yahoo.com",
+ *             "since": "2014...",
+ *             "until": "2014...",
+ *             "data": {
+ *                 "temp": 0,
+ *                 "high": 0,
+ *                 "low": 0
+ *             }
+ *         },
+ *
+ *         {
+ *             "label": "listen_music",
+ *             "type": "action",
+ *             "source": "last.fm",
+ *             ""
+ *         },
+ *
+ *         {
+ *             "label": "repositories",
+ *             "type": "metadata",
+ *             "source": "github.com",
+ *             "data": {
+ *                 "321": {
+ *                     "name": "me",
+ *                     "full_name": "minond/me",
+ *                     "url": "https://..."
+ *                 }
+ *             }
+ *         },
+ *
+ *         {
+ *             "label": "commit",
+ *             "type": "action",
+ *             "source": "github.com",
+ *             "since": "2014...",
+ *             "until": "2014...",
+ *             "data": {
+ *                 "123": {
+ *                     "url": "https://...",
+ *                     "message": "this is what is did",
+ *                     "date": "2014...",
+ *                     "repo": "321"
+ *                 }
+ *             }
+ *         }
+ *     ]
+ * }
+ */
+
+/**
  * @constructor
  * @class Entry
  * @param {string} [label]
