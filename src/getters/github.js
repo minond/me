@@ -1,6 +1,7 @@
 'use strict';
 
 var Entry = require('../entry'),
+    log = require('debug')('github:getter'),
     mime = require('mime');
 
 /**
@@ -13,11 +14,13 @@ function get_github_data (storage, github, filters) {
     var since = filters.since,
         until = filters.until;
 
-    console.log('getting commits from %s to %s', since, until);
-    console.log('fetching repositories for %s', github.user.username);
+    log('getting commits from %s to %s', since, until);
+    log('fetching repositories for %s', github.user.username);
+
     github.repos().then(function (repos) {
         repos.forEach(function (repo) {
-            console.log('fetching commits for %s', repo.full_name);
+            log('fetching commits for %s', repo.full_name);
+
             github.commits(repo, since, until).then(function (commits) {
                 commits.forEach(function (commit) {
                     github.commit(repo, commit).then(function (commit) {
@@ -43,8 +46,7 @@ function get_github_data (storage, github, filters) {
                             });
                         });
 
-                        console.log('saving %s', entry.id());
-                        console.log(entry);
+                        log('saving %s', entry.id());
                     });
                 });
             });

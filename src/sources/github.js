@@ -10,7 +10,8 @@ var URL_BASE = 'api.github.com',
 
 var Q = require('q'),
     lodash = require('lodash'),
-    https = require('https');
+    https = require('https'),
+    log = require('debug')('github:api');
 
 /**
  * returns a function that joins a list of buffers, json decodes that, then
@@ -53,12 +54,15 @@ function api_request (url, arglist) {
         var deferred = Q.defer(),
             options = this.options(url, fields(arguments));
 
+        log('requesting %s', options.path);
         https.get(options, function (res) {
             var buffers = [];
 
+            log('downloading %s', options.path);
             res.on('data', buffers.push.bind(buffers));
             res.on('end', resolve_buffers(deferred, buffers));
         }).on('error', function () {
+            log('error getting %s', options.path);
             deferred.reject(new Error('Error getting ' + options.path));
         });
 
