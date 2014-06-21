@@ -30,6 +30,8 @@ function resolve_buffers (deferred, buffers) {
 
 /**
  * generates an api call method
+ *
+ * @function api_request
  * @parma {string} url the end point (not including the base)
  * @param {Array} [arglist] optional arguments passed into the method and req
  * @return {Function}
@@ -62,9 +64,11 @@ function api_request (url, arglist) {
 
         return deferred.promise;
     };
-};
+}
 
 /**
+ * @constructor
+ * @class Github
  * @param {string} username
  * @param {string} token
  */
@@ -82,6 +86,7 @@ function Github (username, token) {
 
 /**
  * generates a request options object
+ *
  * @method options
  * @param {string} path url path. can be a lodash template string
  * @param {Object} [fields]
@@ -104,6 +109,7 @@ Github.prototype.options = function (path, fields) {
 
 /**
  * gets all repos for user
+ *
  * @method repos
  * @return {Q.Promise}
  */
@@ -111,6 +117,7 @@ Github.prototype.repos = api_request(URL_REPOSITORIES);
 
 /**
  * gets commits for repo within time period
+ *
  * @method commits
  * @param {Object} repo
  * @param {Date} [since]
@@ -121,6 +128,7 @@ Github.prototype.commits = api_request(URL_COMMITS, ['repo', 'since', 'until']);
 
 /**
  * gets a single commit
+ *
  * @method commit
  * @param {Object} repo
  * @param {Object} commit
