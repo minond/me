@@ -28,7 +28,7 @@ module.exports = function get_github_data (storage, github, filters) {
                             sha: commit.sha,
                             url: commit.html_url,
                             message: commit.commit.message,
-                            stats: commit.stats,
+                            stats: commit.stats || {},
                             files: [],
                             repository: {
                                 id: repo.id,
@@ -38,6 +38,7 @@ module.exports = function get_github_data (storage, github, filters) {
                             }
                         });
 
+                        // no file data from github, yet
                         if (commit.files) {
                             commit.files.forEach(function (file) {
                                 entry.data.files.push({
