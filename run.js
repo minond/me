@@ -1,27 +1,35 @@
 'use strict';
 
 var Github = require('./src/sources/github'),
+    every = require('./src/every'),
     weather = require('weather-js'),
     mongojs = require('mongojs');
 
 var get_github_data = require('./src/getters/github'),
     get_weather_data = require('./src/getters/weather');
 
-var me = mongojs('me', ['data']),
-    upserts = require('./src/upserts');
+var me = mongojs('me', ['data']);
 
 var github = new Github(
     process.env.GITHUB_OAUTH_USER,
     process.env.GITHUB_OAUTH_TOKEN
 );
 
-upserts(me.data);
+require('./src/upserts')(me.data);
 
-get_github_data(me.data, github, {
-    since: new Date('2014-06-10'),
-    until: new Date('2014-06-23')
+every(12).hours(function () {
+    var now = new Date(),
+        since = new Date(now.setHours(0, 0, 0)),
+        until = new Date(now.setHours(24, 0, 0));
+
+    get_github_data(me.data, github, {
+        since: since,
+        until: until
+    });
 });
 
-get_weather_data(me.data, weather, {
-    search: 'Provo, UT'
+every.hour(function () {
+    get_weather_data(me.data, weather, {
+        search: 'Provo, UT'
+    });
 });
