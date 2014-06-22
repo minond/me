@@ -47,7 +47,7 @@ module.exports = function get_github_data (storage, github, filters) {
                         });
 
                         log('saving %s', entry.id());
-                        storage.update({ id: entry.id() }, entry.json(), { upsert: true });
+                        storage.upsert(entry);
                     });
                 });
             });

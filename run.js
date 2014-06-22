@@ -7,12 +7,15 @@ var Github = require('./src/sources/github'),
 var get_github_data = require('./src/getters/github'),
     get_weather_data = require('./src/getters/weather');
 
-var me = mongojs('me', ['data']);
+var me = mongojs('me', ['data']),
+    upserts = require('./src/upserts');
 
 var github = new Github(
     process.env.GITHUB_OAUTH_USER,
     process.env.GITHUB_OAUTH_TOKEN
 );
+
+upserts(me.data);
 
 get_github_data(me.data, github, {
     since: new Date('2014-06-10'),

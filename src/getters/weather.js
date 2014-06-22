@@ -37,7 +37,7 @@ module.exports = function get_weather_data (storage, weather, filters) {
 
             entry.dtstamp = dtstamp;
             log('saving %s', entry.id());
-            storage.update({ id: entry.id() }, entry.json(), { upsert: true });
+            storage.upsert(entry);
         } else {
             log('error getting data: %s', err.message);
         }
