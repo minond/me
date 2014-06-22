@@ -4,6 +4,7 @@
  * adds an "upserrt" method to a collection object
  * @function upserts
  * @param {Object} coll
+ * @return {Object}
  */
 module.exports = function upserts (coll) {
     coll.upsert = (function () {
@@ -23,4 +24,6 @@ module.exports = function upserts (coll) {
             });
         };
     })();
+
+    return coll;
 };
