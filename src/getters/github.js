@@ -38,7 +38,7 @@ module.exports = function get_github_data (storage, github, filters) {
                             }
                         });
 
-                        entry.dtstamp = +(new Date(commit.commit.author.date));
+                        entry.dtstamp = new Date(commit.commit.author.date);
                         commit.files.forEach(function (file) {
                             entry.data.files.push({
                                 name: file.filename,
@@ -47,7 +47,7 @@ module.exports = function get_github_data (storage, github, filters) {
                         });
 
                         log('saving %s', entry.id());
-                        storage.insert(entry);
+                        storage.update({ id: entry.id() }, entry.json(), { upsert: true });
                     });
                 });
             });

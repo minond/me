@@ -10,7 +10,7 @@ var Entry = require('../entry'),
  * @param {Object} filters
  */
 module.exports = function get_weather_data (storage, weather, filters) {
-    var entry;
+    var entry, dtstamp;
 
     if (!filters.degreeType) {
         filters.degreeType = 'F';
@@ -20,7 +20,10 @@ module.exports = function get_weather_data (storage, weather, filters) {
     weather.find(filters, function(err, data) {
         if (!err) {
             data = data.pop();
-            entry = new Entry('weather', {
+            dtstamp = new Date(data.current.date + ' ' +
+                data.current.observationtime);
+
+            entry = new Entry('weather', +dtstamp, {
                 loc: data.location.name,
                 lat: data.location.lat,
                 long: data.location.long,
@@ -32,8 +35,9 @@ module.exports = function get_weather_data (storage, weather, filters) {
                 windspeed: data.current.windspeed
             });
 
+            entry.dtstamp = dtstamp;
             log('saving %s', entry.id());
-            storage.insert(entry);
+            storage.update({ id: entry.id() }, entry.json(), { upsert: true });
         } else {
             log('error getting data: %s', err.message);
         }

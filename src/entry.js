@@ -104,9 +104,9 @@ function Entry (label, suid, data) {
 
     /**
      * @property dtstamp
-     * @type {int}
+     * @type {Date}
      */
-    this.dtstamp = Date.now();
+    this.dtstamp = new Date();
 
     /**
      * @property label
@@ -145,6 +145,21 @@ Entry.prototype.id = function () {
         this.dtstamp.valueOf(),
         this.suid
     ].join('-');
+};
+
+/**
+ * @method json
+ * @return {Object}
+ */
+Entry.prototype.json = function () {
+    return {
+        id: this.id(),
+        type: this.type,
+        source: this.source,
+        dtstamp: +this.dtstamp,
+        label: this.label,
+        data: this.data
+    };
 };
 
 /**
