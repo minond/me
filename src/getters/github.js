@@ -38,14 +38,16 @@ module.exports = function get_github_data (storage, github, filters) {
                             }
                         });
 
-                        entry.dtstamp = new Date(commit.commit.author.date);
-                        commit.files.forEach(function (file) {
-                            entry.data.files.push({
-                                name: file.filename,
-                                type: mime.lookup(file.filename)
+                        if (commit.files) {
+                            commit.files.forEach(function (file) {
+                                entry.data.files.push({
+                                    name: file.filename,
+                                    type: mime.lookup(file.filename)
+                                });
                             });
-                        });
+                        }
 
+                        entry.dtstamp = new Date(commit.commit.author.date);
                         log('saving %s', entry.id());
                         storage.upsert(entry);
                     });
