@@ -104,9 +104,9 @@ function Entry (label, suid, data) {
 
     /**
      * @property dtstamp
-     * @type {Date}
+     * @type {int}
      */
-    this.dtstamp = new Date();
+    this.dtstamp = Date.now();
 
     /**
      * @property label

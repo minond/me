@@ -9,7 +9,7 @@ var Entry = require('../entry'),
  * @param {Object} weather
  * @param {Object} filters
  */
-function get_weather_data (storage, weather, filters) {
+module.exports = function get_weather_data (storage, weather, filters) {
     var entry;
 
     if (!filters.degreeType) {
@@ -33,10 +33,9 @@ function get_weather_data (storage, weather, filters) {
             });
 
             log('saving %s', entry.id());
+            storage.insert(entry);
         } else {
             log('error getting data: %s', err.message);
         }
     });
-}
-
-module.exports = get_weather_data;
+};

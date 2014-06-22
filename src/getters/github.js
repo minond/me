@@ -10,7 +10,7 @@ var Entry = require('../entry'),
  * @param {Github} github
  * @param {Object} filters
  */
-function get_github_data (storage, github, filters) {
+module.exports = function get_github_data (storage, github, filters) {
     var since = filters.since,
         until = filters.until;
 
@@ -38,7 +38,7 @@ function get_github_data (storage, github, filters) {
                             }
                         });
 
-                        entry.dtstamp = new Date(commit.commit.author.date);
+                        entry.dtstamp = +(new Date(commit.commit.author.date));
                         commit.files.forEach(function (file) {
                             entry.data.files.push({
                                 name: file.filename,
@@ -47,11 +47,10 @@ function get_github_data (storage, github, filters) {
                         });
 
                         log('saving %s', entry.id());
+                        storage.insert(entry);
                     });
                 });
             });
         });
     });
-}
-
-module.exports = get_github_data;
+};
