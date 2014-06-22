@@ -17,9 +17,9 @@ module.exports = function upserts (coll) {
 
             coll.update(query, data, options, function (err) {
                 if (!err) {
-                    log('succesfully saved to collection');
+                    log('succesfully saved %s', entry.id());
                 } else {
-                    log('error: %s', err.message);
+                    log('error saving %s: %s', entry.id(), err.message);
                 }
             });
         };
