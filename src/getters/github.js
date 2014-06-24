@@ -21,39 +21,47 @@ module.exports = function get_github_data (storage, github, filters) {
         repos.forEach(function (repo) {
             log('fetching commits for %s', repo.full_name);
 
-            github.commits(repo, since, until).then(function (commits) {
-                commits.forEach(function (commit) {
-                    github.commit(repo, commit).then(function (commit) {
-                        var entry = new Entry('commit', repo.id + commit.sha, {
-                            sha: commit.sha,
-                            url: commit.html_url,
-                            message: commit.commit.message,
-                            stats: commit.stats || {},
-                            files: [],
-                            repository: {
-                                id: repo.id,
-                                name: repo.name,
-                                full_name: repo.full_name,
-                                url: repo.html_url
-                            }
-                        });
+            (function getcommits (page) {
+                github.commits(repo, since, until, page).then(function (commits) {
+                    if (commits.length) {
+                        getcommits(page + 1);
+                    } else if (page === 1) {
+                        log('no new commits for %s', repo.full_name);
+                    }
 
-                        // no file data from github, yet
-                        if (commit.files) {
-                            commit.files.forEach(function (file) {
-                                entry.data.files.push({
-                                    name: file.filename,
-                                    type: mime.lookup(file.filename)
-                                });
+                    commits.forEach(function (commit) {
+                        github.commit(repo, commit).then(function (commit) {
+                            var entry = new Entry('commit', repo.id + commit.sha, {
+                                sha: commit.sha,
+                                url: commit.html_url,
+                                message: commit.commit.message,
+                                stats: commit.stats || {},
+                                files: [],
+                                repository: {
+                                    id: repo.id,
+                                    name: repo.name,
+                                    full_name: repo.full_name,
+                                    url: repo.html_url
+                                }
                             });
-                        }
 
-                        entry.dtstamp = new Date(commit.commit.author.date);
-                        log('saving %s', entry.id());
-                        storage.upsert(entry);
+                            // no file data from github, yet
+                            if (commit.files) {
+                                commit.files.forEach(function (file) {
+                                    entry.data.files.push({
+                                        name: file.filename,
+                                        type: mime.lookup(file.filename)
+                                    });
+                                });
+                            }
+
+                            entry.dtstamp = new Date(commit.commit.author.date);
+                            log('saving %s', entry.id());
+                            storage.upsert(entry);
+                        });
                     });
                 });
-            });
+            })(1);
         });
     });
 };

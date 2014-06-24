@@ -6,7 +6,8 @@ var URL_BASE = 'api.github.com',
     URL_COMMITS = '/repos/${ user.username }/${ repo.name }/commits?' +
         'author=${ user.username }&' +
         'since=${ since.toISOString() }&' +
-        'until=${ until.toISOString() }';
+        'until=${ until.toISOString() }&' +
+        'page=${ page }';
 
 var Q = require('q'),
     lodash = require('lodash'),
@@ -98,7 +99,8 @@ function Github (username, token) {
  */
 Github.prototype.options = function (path, fields) {
     fields = lodash.defaults(fields || {}, {
-        user: this.user
+        user: this.user,
+        page: 1
     });
 
     return {
@@ -128,7 +130,7 @@ Github.prototype.repos = api_request(URL_REPOSITORIES);
  * @param {Date} [until]
  * @return {Q.Promise}
  */
-Github.prototype.commits = api_request(URL_COMMITS, ['repo', 'since', 'until']);
+Github.prototype.commits = api_request(URL_COMMITS, ['repo', 'since', 'until', 'page']);
 
 /**
  * gets a single commit
