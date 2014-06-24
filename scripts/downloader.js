@@ -6,11 +6,28 @@ var every = require('../src/every'),
     storage = require('../src/upserts')(me.data),
     log = require('debug')('worker');
 
+// sources
 var Github = require('../src/sources/github'),
+    Lastfm = require('../src/sources/lastfm'),
     weather = require('weather-js');
 
+// getters
 var get_github_data = require('../src/getters/github'),
+    get_lastfm_data = require('../src/getters/lastfm'),
     get_weather_data = require('../src/getters/weather');
+
+// returns a filter object containing { since, until } keys
+// used to filter "today" in date ranges
+function today () {
+    var now = new Date(),
+        since = new Date(now.setHours(0, 0, 0)),
+        until = new Date(now.setHours(24, 0, 0));
+
+    return {
+        since: since,
+        until: until
+    };
+}
 
 // check mongo connection
 every.hour(function () {
@@ -30,24 +47,27 @@ every.hour(function () {
     });
 });
 
-// github data
+// code
 every(12).hours(function () {
-    var now = new Date(),
-        since = new Date(now.setHours(0, 0, 0)),
-        until = new Date(now.setHours(24, 0, 0));
-
     var github = new Github(
         process.env.GITHUB_OAUTH_USER,
         process.env.GITHUB_OAUTH_TOKEN
     );
 
-    get_github_data(storage, github, {
-        since: since,
-        until: until
-    });
+    get_github_data(storage, github, today());
 });
 
-// weather data
+// songs
+every(12).hours(function () {
+    var lastfm = new Lastfm(
+        process.env.LASTFM_USER,
+        process.env.LASTFM_API_KEY
+    );
+
+    get_lastfm_data(storage, lastfm, today());
+});
+
+// weather
 every.hour(function () {
     get_weather_data(storage, weather, {
         search: 'Provo, UT'

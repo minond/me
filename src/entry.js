@@ -188,6 +188,10 @@ Entry.INFO = {
     commit: {
         type: Entry.SCHEMA.TYPES.ACTION,
         source: 'github.com'
+    },
+    song: {
+        type: Entry.SCHEMA.TYPES.ACTION,
+        source: 'last.fm'
     }
 };
 

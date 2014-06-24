@@ -7,6 +7,7 @@ var URL_BASE = 'api.github.com',
         'author=${ user.username }&' +
         'since=${ since.toISOString() }&' +
         'until=${ until.toISOString() }&' +
+        'per_page=100&' +
         'page=${ page }';
 
 var Q = require('q'),
@@ -128,6 +129,7 @@ Github.prototype.repos = api_request(URL_REPOSITORIES);
  * @param {Object} repo
  * @param {Date} [since]
  * @param {Date} [until]
+ * @param {int} [page]
  * @return {Q.Promise}
  */
 Github.prototype.commits = api_request(URL_COMMITS, ['repo', 'since', 'until', 'page']);
