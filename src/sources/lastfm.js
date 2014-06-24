@@ -36,6 +36,7 @@ function resolve_buffers (deferred, buffers) {
  * generates a request options object
  *
  * @function get_options
+ * @param {Object} instance
  * @param {string} path url path. can be a lodash template string
  * @param {Object} [fields]
  * @return {Object}

@@ -32,6 +32,31 @@ function resolve_buffers (deferred, buffers) {
 }
 
 /**
+ * generates a request options object
+ *
+ * @function get_options
+ * @param {Object} instance
+ * @param {string} path url path. can be a lodash template string
+ * @param {Object} [fields]
+ * @return {Object}
+ */
+function get_options (instance, path, fields) {
+    fields = lodash.defaults(fields || {}, {
+        user: instance.user,
+        page: 1
+    });
+
+    return {
+        host: URL_BASE,
+        path: lodash.template(path, fields),
+        auth: instance.user.token + ':x-oauth-basic',
+        headers: {
+            'User-Agent': instance.user.username
+        }
+    };
+}
+
+/**
  * generates an api call method
  *
  * @function api_request
@@ -54,7 +79,7 @@ function api_request (url, arglist) {
 
     return function () {
         var deferred = Q.defer(),
-            options = this.options(url, fields(arguments));
+            options = get_options(this, url, fields(arguments));
 
         log('requesting %s', options.path);
         https.get(options, function (res) {
@@ -89,30 +114,6 @@ function Github (username, token) {
         token: token
     };
 }
-
-/**
- * generates a request options object
- *
- * @method options
- * @param {string} path url path. can be a lodash template string
- * @param {Object} [fields]
- * @return {Object}
- */
-Github.prototype.options = function (path, fields) {
-    fields = lodash.defaults(fields || {}, {
-        user: this.user,
-        page: 1
-    });
-
-    return {
-        host: URL_BASE,
-        path: lodash.template(path, fields),
-        auth: this.user.token + ':x-oauth-basic',
-        headers: {
-            'User-Agent': this.user.username
-        }
-    };
-};
 
 /**
  * gets all repos for user
