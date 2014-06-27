@@ -3,7 +3,8 @@
 var SECOND = 1000,
     MINUTE = SECOND * 60,
     HOUR = MINUTE * 60,
-    DAY = HOUR * 24;
+    DAY = HOUR * 24,
+    WEEK = DAY * 7;
 
 /**
  * generates a repeater function
@@ -37,7 +38,8 @@ module.exports = function every (inc) {
         seconds: repeat(inc * SECOND),
         minutes: repeat(inc * MINUTE),
         hours: repeat(inc * HOUR),
-        days: repeat(inc * DAY)
+        days: repeat(inc * DAY),
+        weeks: repeat(inc * WEEK),
     };
 };
 
@@ -45,3 +47,4 @@ module.exports.second = repeat(SECOND);
 module.exports.minute = repeat(MINUTE);
 module.exports.hour = repeat(HOUR);
 module.exports.day = repeat(DAY);
+module.exports.week = repeat(WEEK);

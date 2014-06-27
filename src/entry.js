@@ -13,6 +13,7 @@
  *
  *     "types": {
  *         "environment": "things around me I cannot control",
+ *         "health": "health related actions (sleep, steps, etc.)",
  *         "action": "things I do",
  *         "metadata": "information/data about information/data"
  *     }
@@ -92,7 +93,7 @@ function Entry (label, suid, data) {
     /**
      * @property type
      * @type {string}
-     * @see Entry.SCHEMA.TYPES
+     * @see Entry.schema.types
      */
     this.type = null;
 
@@ -167,8 +168,9 @@ Entry.prototype.json = function () {
  * @final
  * @type {Object}
  */
-Entry.SCHEMA = {
-    TYPES: {
+Entry.schema = {
+    types: {
+        HEALTH: 'health',
         ACTION: 'action',
         ENVIRONMENT: 'environment',
         METADATA: 'metadata'
@@ -181,16 +183,20 @@ Entry.SCHEMA = {
  * @type {Object}
  */
 Entry.INFO = {
+    sleep: {
+        type: Entry.schema.types.HEALTH,
+        source: 'Sleep Cycle App'
+    },
     weather: {
-        type: Entry.SCHEMA.TYPES.ENVIRONMENT,
+        type: Entry.schema.types.ENVIRONMENT,
         source: 'msn.com'
     },
     commit: {
-        type: Entry.SCHEMA.TYPES.ACTION,
+        type: Entry.schema.types.ACTION,
         source: 'github.com'
     },
     song: {
-        type: Entry.SCHEMA.TYPES.ACTION,
+        type: Entry.schema.types.ACTION,
         source: 'last.fm'
     }
 };

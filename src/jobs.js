@@ -15,6 +15,9 @@ var get_github_data = require('./getters/github'),
     get_lastfm_data = require('./getters/lastfm'),
     get_weather_data = require('./getters/weather');
 
+// parsers
+var parse_sleep_cycle_data = require('./parsers/sleep_cycle');
+
 // api connections
 var lastfm = new Lastfm(process.env.LASTFM_USER, process.env.LASTFM_API_KEY),
     github = new Github(process.env.GITHUB_OAUTH_USER, process.env.GITHUB_OAUTH_TOKEN);
@@ -82,9 +85,18 @@ function get_weather () {
     get_weather_data(storage, weather, { search: 'Provo, UT' });
 }
 
+/**
+ * parses csv output from my sleep cycle app
+ * @function parse_sleep_data
+ */
+function parse_sleep_data () {
+    parse_sleep_cycle_data(storage, '/home/marcos/Downloads/sleepdata*');
+}
+
 module.exports = {
     check_mongo_connection: check_mongo_connection,
     get_weather: get_weather,
     get_code: get_code,
-    get_songs: get_songs
+    get_songs: get_songs,
+    parse_sleep_data: parse_sleep_data
 };
