@@ -2,7 +2,6 @@
 
 var mongojs = require('mongojs'),
     me = mongojs('me', ['data']),
-    storage = require('./upserts')(me.data),
     log = require('debug')('worker'),
     config = require('../config/getters');
 
@@ -18,10 +17,31 @@ var get_github_data = require('./getters/github'),
     get_weather_data = require('./getters/weather'),
     get_sleep_cycle_data = require('./getters/sleep_cycle');
 
-// api connections
+// sources
 var lastfm = new Lastfm(config.lastfm.user, config.lastfm.key),
     github = new Github(config.github.user, config.github.key),
     sleep_data = new Csv(config.sleep_cycle.files, { required_columns: ['start', 'end'] });
+
+ // adds an "upserrt" method to a collection object
+(function (coll) {
+    coll.upsert = (function () {
+        var log = require('debug')('mongo');
+
+        return function (entry) {
+            var query = { id: entry.id() },
+                options = { upsert: true },
+                data = entry.json();
+
+            coll.update(query, data, options, function (err) {
+                if (!err) {
+                    log('succesfully saved %s', entry.id());
+                } else {
+                    log('error saving %s: %s', entry.id(), err.message);
+                }
+            });
+        };
+    })();
+})(me.data);
 
 /**
  * returns a filter object containing { since, until } keys. used to filter
@@ -67,7 +87,7 @@ function check_mongo_connection () {
  * @function get_code
  */
 function get_code () {
-    get_github_data(storage, github, today());
+    get_github_data(me.data, github, today());
 }
 
 /**
@@ -75,7 +95,7 @@ function get_code () {
  * @function get_songs
  */
 function get_songs () {
-    get_lastfm_data(storage, lastfm, today());
+    get_lastfm_data(me.data, lastfm, today());
 }
 
 /**
@@ -83,15 +103,15 @@ function get_songs () {
  * @function get_weather
  */
 function get_weather () {
-    get_weather_data(storage, weather, { search: config.weather.static_location });
+    get_weather_data(me.data, weather, { search: config.weather.static_location });
 }
 
 /**
  * parses csv output from my sleep cycle app
- * @function parse_sleep_data
+ * @function get_sleep_cycle
  */
-function get_sleep_data () {
-    get_sleep_cycle_data(storage, sleep_data);
+function get_sleep_cycle () {
+    get_sleep_cycle_data(me.data, sleep_data);
 }
 
 module.exports = {
@@ -99,5 +119,5 @@ module.exports = {
     get_weather: get_weather,
     get_code: get_code,
     get_songs: get_songs,
-    get_sleep_data: get_sleep_data
+    get_sleep_cycle: get_sleep_cycle
 };

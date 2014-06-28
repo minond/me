@@ -10,7 +10,7 @@ module.exports = {
     },
 
     sleep_cycle: {
-        files: '/home/marcos/Downloads/sleepdata*'
+        files: process.env.HOME + '/Downloads/sleepdata*'
     },
 
     weather: {
