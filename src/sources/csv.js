@@ -108,18 +108,19 @@ function Csv (fpattern, options) {
  * @method rows
  * @return {Q.Promise}
  */
+Csv.prototype.files = function () {
+    return Q.nfcall(glob, this.fpattern);
+};
+
+/**
+ * @method rows
+ * @return {Q.Promise}
+ */
 Csv.prototype.rows = function () {
     var deferred = Q.defer(),
         csv_parse_options = this.csv_parse_options;
 
-    log('looking for files matching %s pattern', this.fpattern);
-    glob(this.fpattern, function (err, files) {
-        if (err) {
-            log('error: %s', err.message);
-            deferred.reject(err);
-            return;
-        }
-
+    this.files().then(function (files) {
         files.forEach(function (file) {
             log('reading %s', file);
             fs.readFile(file, function (err, data) {
