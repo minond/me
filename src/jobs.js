@@ -20,7 +20,9 @@ var get_github_data = require('./getters/github'),
 // sources
 var lastfm = new Lastfm(config.lastfm.user, config.lastfm.key),
     github = new Github(config.github.user, config.github.key),
-    sleep_data = new Csv(config.sleep_cycle.files, { required_columns: ['start', 'end'] });
+    sleep_data = new Csv(config.sleep_cycle.files, {
+        required_columns: ['start', 'end']
+    });
 
  // adds an "upserrt" method to a collection object
 (function (coll) {
@@ -65,7 +67,7 @@ function today () {
  * check we're still connected to mongo. kill process on error
  * @function check_mongo_connection
  */
-function check_mongo_connection () {
+module.exports.check_mongo_connection = function () {
     log('checking mongo stats');
     me.stats(function (err, stats) {
         if (err) {
@@ -80,44 +82,36 @@ function check_mongo_connection () {
             log('mongo connection up and running');
         }
     });
-}
+};
 
 /**
  * gets code/commit data from github for the past day
  * @function get_code
  */
-function get_code () {
+module.exports.get_code = function () {
     get_github_data(me.data, github, today());
-}
+};
 
 /**
  * gets song data from last.fm for the past day
  * @function get_songs
  */
-function get_songs () {
+module.exports.get_songs = function () {
     get_lastfm_data(me.data, lastfm, today());
-}
+};
 
 /**
  * gets local weather data
  * @function get_weather
  */
-function get_weather () {
+module.exports.get_weather = function () {
     get_weather_data(me.data, weather, { search: config.weather.static_location });
-}
+};
 
 /**
  * parses csv output from my sleep cycle app
  * @function get_sleep_cycle
  */
-function get_sleep_cycle () {
+module.exports.get_sleep_cycle = function () {
     get_sleep_cycle_data(me.data, sleep_data);
-}
-
-module.exports = {
-    check_mongo_connection: check_mongo_connection,
-    get_weather: get_weather,
-    get_code: get_code,
-    get_songs: get_songs,
-    get_sleep_cycle: get_sleep_cycle
 };
