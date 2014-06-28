@@ -83,7 +83,18 @@ function csv_parse_option_required_columns (rows, required_columns) {
  * @param {Object} [options]
  */
 function Csv (fpattern, options) {
+    /**
+     * file search pattern
+     * @property fpattern
+     * @type {string}
+     */
     this.fpattern = fpattern;
+
+    /**
+     * options for parsing csv string
+     * @property csv_parse_options
+     * @type {Object}
+     */
     this.csv_parse_options = lodash.defaults(options || {}, {
         delimiter: ';',
         columns: true,
