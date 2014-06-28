@@ -40,7 +40,10 @@ function csv_parse_option_normalize_columns (rows) {
                 .replace(/\W+/g, '');
 
             delete row[ key ];
-            row[ normalized ] = val;
+
+            if (normalized) {
+                row[ normalized ] = val;
+            }
         });
     });
 }
@@ -96,6 +99,7 @@ function Csv (fpattern, options) {
      * @type {Object}
      */
     this.csv_parse_options = lodash.defaults(options || {}, {
+        ignore_lines: 0,
         columns: true,
         normalize_columns: true,
         required_columns: [],
@@ -131,6 +135,12 @@ Csv.prototype.rows = function () {
                 }
 
                 log('parsing %s', file);
+                data = data
+                    .toString()
+                    .split('\n')
+                    .splice(csv_parse_options.ignore_lines)
+                    .join('\n')
+
                 csv.parse(data, csv_parse_options, function (err, rows) {
                     if (err) {
                         log('error parsing %s: %s', file, err.message);
