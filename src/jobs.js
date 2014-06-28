@@ -8,19 +8,19 @@ var mongojs = require('mongojs'),
 // sources
 var Github = require('./sources/github'),
     Lastfm = require('./sources/lastfm'),
+    Csv = require('./sources/csv'),
     weather = require('weather-js');
 
 // getters
 var get_github_data = require('./getters/github'),
     get_lastfm_data = require('./getters/lastfm'),
-    get_weather_data = require('./getters/weather');
-
-// parsers
-var parse_sleep_cycle_data = require('./parsers/sleep_cycle');
+    get_weather_data = require('./getters/weather'),
+    get_sleep_cycle_data = require('./getters/sleep_cycle');
 
 // api connections
 var lastfm = new Lastfm(process.env.LASTFM_USER, process.env.LASTFM_API_KEY),
-    github = new Github(process.env.GITHUB_OAUTH_USER, process.env.GITHUB_OAUTH_TOKEN);
+    github = new Github(process.env.GITHUB_OAUTH_USER, process.env.GITHUB_OAUTH_TOKEN),
+    sleep_data = new Csv('/home/marcos/Downloads/sleepdata*', { required_columns: ['start', 'end'] });
 
 /**
  * returns a filter object containing { since, until } keys. used to filter
@@ -89,8 +89,8 @@ function get_weather () {
  * parses csv output from my sleep cycle app
  * @function parse_sleep_data
  */
-function parse_sleep_data () {
-    parse_sleep_cycle_data(storage, '/home/marcos/Downloads/sleepdata*');
+function get_sleep_data () {
+    get_sleep_cycle_data(storage, sleep_data);
 }
 
 module.exports = {
@@ -98,5 +98,5 @@ module.exports = {
     get_weather: get_weather,
     get_code: get_code,
     get_songs: get_songs,
-    parse_sleep_data: parse_sleep_data
+    get_sleep_data: get_sleep_data
 };
