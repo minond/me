@@ -22,6 +22,7 @@ var lastfm = new Lastfm(config.lastfm.user, config.lastfm.key),
     github = new Github(config.github.user, config.github.key),
     weather = new Weather(config.weather.static_location),
     sleep_data = new Csv(config.sleep_cycle.files, {
+        delimiter: ';',
         required_columns: ['start', 'end']
     });
 

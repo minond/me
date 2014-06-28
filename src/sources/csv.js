@@ -96,7 +96,6 @@ function Csv (fpattern, options) {
      * @type {Object}
      */
     this.csv_parse_options = lodash.defaults(options || {}, {
-        delimiter: ';',
         columns: true,
         normalize_columns: true,
         required_columns: [],
@@ -123,7 +122,6 @@ Csv.prototype.rows = function () {
 
         files.forEach(function (file) {
             log('reading %s', file);
-
             fs.readFile(file, function (err, data) {
                 if (err) {
                     log('error reading %s: %s', file, err.message);
@@ -131,6 +129,7 @@ Csv.prototype.rows = function () {
                     return;
                 }
 
+                log('parsing %s', file);
                 csv.parse(data, csv_parse_options, function (err, rows) {
                     if (err) {
                         log('error parsing %s: %s', file, err.message);
