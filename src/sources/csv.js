@@ -105,7 +105,7 @@ function Csv (fpattern, options) {
 }
 
 /**
- * @method rows
+ * @method files
  * @return {Q.Promise}
  */
 Csv.prototype.files = function () {
