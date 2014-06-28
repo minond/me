@@ -9,7 +9,7 @@ var mongojs = require('mongojs'),
 var Github = require('./sources/github'),
     Lastfm = require('./sources/lastfm'),
     Csv = require('./sources/csv'),
-    weather = require('weather-js');
+    Weather = require('./sources/weather');
 
 // getters
 var get_github_data = require('./getters/github'),
@@ -20,6 +20,7 @@ var get_github_data = require('./getters/github'),
 // sources
 var lastfm = new Lastfm(config.lastfm.user, config.lastfm.key),
     github = new Github(config.github.user, config.github.key),
+    weather = new Weather(config.weather.static_location),
     sleep_data = new Csv(config.sleep_cycle.files, {
         required_columns: ['start', 'end']
     });
@@ -105,7 +106,7 @@ module.exports.get_songs = function () {
  * @function get_weather
  */
 module.exports.get_weather = function () {
-    get_weather_data(me.data, weather, { search: config.weather.static_location });
+    get_weather_data(me.data, weather);
 };
 
 /**

@@ -6,40 +6,27 @@ var Entry = require('../entry'),
 /**
  * @function get_weather_data
  * @param {Object} storage
- * @param {Object} weather
- * @param {Object} filters
+ * @param {Weather} weather
  */
-module.exports = function get_weather_data (storage, weather, filters) {
-    var entry, dtstamp;
+module.exports = function get_weather_data (storage, weather) {
+    weather.get().then(function (data) {
+        var dtstamp = new Date(data.current.date + ' ' +
+            data.current.observationtime);
 
-    if (!filters.degreeType) {
-        filters.degreeType = 'F';
-    }
+        var entry = new Entry('weather', +dtstamp, {
+            loc: data.location.name,
+            lat: data.location.lat,
+            long: data.location.long,
+            degreetype: data.location.degreetype,
+            skytext: data.current.skytext,
+            temperature: data.current.temperature,
+            feelslike: data.current.feelslike,
+            humidity: data.current.humidity,
+            windspeed: data.current.windspeed
+        });
 
-    log('getting weather for %s', filters.search);
-    weather.find(filters, function(err, data) {
-        if (!err) {
-            data = data.pop();
-            dtstamp = new Date(data.current.date + ' ' +
-                data.current.observationtime);
-
-            entry = new Entry('weather', +dtstamp, {
-                loc: data.location.name,
-                lat: data.location.lat,
-                long: data.location.long,
-                degreetype: data.location.degreetype,
-                skytext: data.current.skytext,
-                temperature: data.current.temperature,
-                feelslike: data.current.feelslike,
-                humidity: data.current.humidity,
-                windspeed: data.current.windspeed
-            });
-
-            entry.dtstamp = dtstamp;
-            log('saving %s', entry.id());
-            storage.upsert(entry);
-        } else {
-            log('error getting data: %s', err.message);
-        }
+        entry.dtstamp = dtstamp;
+        log('saving %s', entry.id());
+        storage.upsert(entry);
     });
 };
