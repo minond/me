@@ -8,8 +8,8 @@ var mongojs = require('mongojs'),
 // sources
 var Github = require('./sources/github'),
     Lastfm = require('./sources/lastfm'),
-    Csv = require('./sources/csv'),
-    Weather = require('./sources/weather');
+    Weather = require('./sources/weather'),
+    Csv = require('./sources/csv');
 
 // getters
 var get_github_data = require('./getters/github'),
@@ -17,7 +17,7 @@ var get_github_data = require('./getters/github'),
     get_weather_data = require('./getters/weather'),
     get_sleep_cycle_data = require('./getters/sleep_cycle');
 
-// sources
+// connections
 var lastfm = new Lastfm(config.lastfm.user, config.lastfm.key),
     github = new Github(config.github.user, config.github.key),
     weather = new Weather(config.weather.static_location),

@@ -104,7 +104,8 @@ Fitbit.prototype.profile = api_request(URL_USER_PROFILE);
 
 /**
  * @link https://wiki.fitbit.com/display/API/API-Get-Activities
- * @method profile
+ * @method activities
+ * @param {Date} date
  * @return {Q.Promise}
  */
 Fitbit.prototype.activities = api_request(URL_USER_ACTIVITIES, ['date']);
