@@ -3,7 +3,8 @@
 var mongojs = require('mongojs'),
     me = mongojs('me', ['data']),
     storage = require('./upserts')(me.data),
-    log = require('debug')('worker');
+    log = require('debug')('worker'),
+    config = require('../config/getters');
 
 // sources
 var Github = require('./sources/github'),
@@ -18,9 +19,9 @@ var get_github_data = require('./getters/github'),
     get_sleep_cycle_data = require('./getters/sleep_cycle');
 
 // api connections
-var lastfm = new Lastfm(process.env.LASTFM_USER, process.env.LASTFM_API_KEY),
-    github = new Github(process.env.GITHUB_OAUTH_USER, process.env.GITHUB_OAUTH_TOKEN),
-    sleep_data = new Csv('/home/marcos/Downloads/sleepdata*', { required_columns: ['start', 'end'] });
+var lastfm = new Lastfm(config.lastfm.user, config.lastfm.key),
+    github = new Github(config.github.user, config.github.key),
+    sleep_data = new Csv(config.sleep_cycle.files, { required_columns: ['start', 'end'] });
 
 /**
  * returns a filter object containing { since, until } keys. used to filter
@@ -82,7 +83,7 @@ function get_songs () {
  * @function get_weather
  */
 function get_weather () {
-    get_weather_data(storage, weather, { search: 'Provo, UT' });
+    get_weather_data(storage, weather, { search: config.weather.static_location });
 }
 
 /**
