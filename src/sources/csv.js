@@ -1,10 +1,11 @@
 'use strict';
 
+var File = require('./file');
+
 var Q = require('q'),
     lodash = require('lodash'),
-    glob = require('glob'),
+    util = require('util'),
     csv = require('csv'),
-    fs = require('fs'),
     log = require('debug')('csv:file');
 
 /**
@@ -86,12 +87,7 @@ function csv_parse_option_required_columns (rows, required_columns) {
  * @param {Object} [options]
  */
 function Csv (fpattern, options) {
-    /**
-     * file search pattern
-     * @property fpattern
-     * @type {string}
-     */
-    this.fpattern = fpattern;
+    File.call(this, fpattern);
 
     /**
      * options for parsing csv string
@@ -108,13 +104,7 @@ function Csv (fpattern, options) {
     });
 }
 
-/**
- * @method files
- * @return {Q.Promise}
- */
-Csv.prototype.files = function () {
-    return Q.nfcall(glob, this.fpattern);
-};
+util.inherits(Csv, File);
 
 /**
  * @method rows
@@ -124,44 +114,35 @@ Csv.prototype.rows = function () {
     var deferred = Q.defer(),
         csv_parse_options = this.csv_parse_options;
 
-    this.files().then(function (files) {
-        files.forEach(function (file) {
-            log('reading %s', file);
-            fs.readFile(file, function (err, data) {
+    this.contents().then(function (contents) {
+        contents.forEach(function (data) {
+            data = data
+                .toString()
+                .split('\n')
+                .splice(csv_parse_options.ignore_lines)
+                .join('\n');
+
+            log('parsing csv file');
+            csv.parse(data, csv_parse_options, function (err, rows) {
                 if (err) {
-                    log('error reading %s: %s', file, err.message);
+                    log('error parsing file: %s', err.message);
                     deferred.reject(err);
                     return;
                 }
 
-                log('parsing %s', file);
-                data = data
-                    .toString()
-                    .split('\n')
-                    .splice(csv_parse_options.ignore_lines)
-                    .join('\n')
+                if (csv_parse_options.trim) {
+                    csv_parse_option_trim(rows);
+                }
 
-                csv.parse(data, csv_parse_options, function (err, rows) {
-                    if (err) {
-                        log('error parsing %s: %s', file, err.message);
-                        deferred.reject(err);
-                        return;
-                    }
+                if (csv_parse_options.normalize_columns) {
+                    csv_parse_option_normalize_columns(rows);
+                }
 
-                    if (csv_parse_options.trim) {
-                        csv_parse_option_trim(rows);
-                    }
+                if (csv_parse_options.required_columns.length) {
+                    rows = csv_parse_option_required_columns(rows, csv_parse_options.required_columns);
+                }
 
-                    if (csv_parse_options.normalize_columns) {
-                        csv_parse_option_normalize_columns(rows);
-                    }
-
-                    if (csv_parse_options.required_columns.length) {
-                        rows = csv_parse_option_required_columns(rows, csv_parse_options.required_columns);
-                    }
-
-                    deferred.resolve(rows);
-                });
+                deferred.resolve(rows);
             });
         });
     });
