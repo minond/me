@@ -14,6 +14,7 @@ var FITBIT_API_VERSION = '1.0',
 
 var OAuth = require('oauth').OAuth,
     lodash = require('lodash'),
+    log = require('debug')('fitbit:api'),
     Q = require('q');
 
 /**
@@ -49,6 +50,7 @@ function api_request (url, arglist) {
             deferred.resolve(JSON.parse(data));
         }
 
+        log('requesting %s', lodash.template(url, fields(arguments)));
         this.$oauth.get(
             lodash.template(url, fields(arguments)),
             this.$auth.user_token,

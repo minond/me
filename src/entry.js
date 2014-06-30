@@ -187,6 +187,14 @@ Entry.INFO = {
         type: Entry.schema.types.HEALTH,
         source: 'Sleep Cycle App'
     },
+    weight: {
+        type: Entry.schema.types.HEALTH,
+        source: 'Fitbit Aria'
+    },
+    steps: {
+        type: Entry.schema.types.HEALTH,
+        source: 'Fitbit One'
+    },
     weather: {
         type: Entry.schema.types.ENVIRONMENT,
         source: 'msn.com'
