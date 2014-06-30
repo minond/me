@@ -18,6 +18,7 @@ module.exports = function get_github_data (storage, github, filters) {
     log('fetching repositories for %s', github.$user.username);
 
     github.repos().then(function (repos) {
+        log('repo count: %s', repos.length);
         repos.forEach(function (repo) {
             log('fetching commits for %s', repo.full_name);
 
@@ -29,6 +30,7 @@ module.exports = function get_github_data (storage, github, filters) {
                         log('no new commits for %s', repo.full_name);
                     }
 
+                    log('commit count: %s', commits.length);
                     commits.forEach(function (commit) {
                         github.commit(repo, commit).then(function (commit) {
                             var entry = new Entry('commit', repo.id + commit.sha, {

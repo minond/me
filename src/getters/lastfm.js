@@ -21,6 +21,7 @@ module.exports = function get_lastfm_data (storage, lastfm, filters) {
                 getrecenttracks(page + 1);
             }
 
+            log('song count: %s', user.recenttracks.track.length || 0);
             user.recenttracks.track.forEach(function (track) {
                 var dtint = track.date ? track.date['#text'] : Date.now(),
                     dtstamp = new Date(dtint),
