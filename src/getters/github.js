@@ -15,7 +15,7 @@ module.exports = function get_github_data (storage, github, filters) {
         until = filters.until;
 
     log('getting commits from %s to %s', since, until);
-    log('fetching repositories for %s', github.user.username);
+    log('fetching repositories for %s', github.$user.username);
 
     github.repos().then(function (repos) {
         repos.forEach(function (repo) {
