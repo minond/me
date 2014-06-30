@@ -1,8 +1,7 @@
 'use strict';
 
 var Q = require('q'),
-    lodash = require('lodash'),
-    log = require('debug')('base:api');
+    lodash = require('lodash');
 
 /**
  * returns a function that joins a list of buffers, json decodes that, then
@@ -56,7 +55,8 @@ Api.request = function (url, arglist) {
 
     return function () {
         var deferred = Q.defer(),
-            options = this.$options(url, fields(arguments));
+            options = this.$options(url, fields(arguments)),
+            log = this.$log;
 
         log('requesting %s', options.path);
         this.$proxy.get(options, function (res) {
@@ -72,7 +72,7 @@ Api.request = function (url, arglist) {
 
         return deferred.promise;
     };
-}
+};
 
 /**
  * generates a request options object
@@ -84,6 +84,6 @@ Api.request = function (url, arglist) {
  */
 Api.prototype.$options = function (path, fields) {
     return {};
-}
+};
 
 module.exports = Api;

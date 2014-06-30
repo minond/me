@@ -12,8 +12,7 @@ var URL_BASE = 'api.github.com',
 
 var Api = require('./api'),
     lodash = require('lodash'),
-    util = require('util'),
-    log = require('debug')('github:api');
+    util = require('util');
 
 /**
  * @constructor
@@ -23,6 +22,12 @@ var Api = require('./api'),
  */
 function Github (username, token) {
     Api.call(this);
+
+    /**
+     * @property $log
+     * @type {Function}
+     */
+    this.$log = require('debug')('github:api');
 
     /**
      * basic user info
@@ -56,8 +61,8 @@ function Github (username, token) {
                 'User-Agent': this.$user.username
             }
         };
-    }
-};
+    };
+}
 
 util.inherits(Github, Api);
 

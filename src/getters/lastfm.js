@@ -14,7 +14,7 @@ module.exports = function get_lastfm_data (storage, lastfm, filters) {
         until = filters.until;
 
     (function getrecenttracks (page) {
-        lastfm.user.getrecenttracks(since, until, page).then(function (user) {
+        lastfm.getrecenttracks(since, until, page).then(function (user) {
             var attr = user.recenttracks['@attr'];
 
             if (page < +attr.totalPages) {
