@@ -1,6 +1,6 @@
 'use strict';
 
-describe('logger module', function () {
+describe('entry class', function () {
     var entry, data;
 
     var Entry = require('../../../src/entry'),
