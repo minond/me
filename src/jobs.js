@@ -58,27 +58,6 @@ var sleep = new Csv(config.sleep_cycle.files, {
 })(me.data);
 
 /**
- * returns a filter object containing { since, until } keys. used to filter
- * "today" in date ranges
- *
- * @function today
- * @return {Object}
- */
-function today () {
-    var now = new Date(),
-        since = new Date(now.setHours(0, 0, 0)),
-        until = new Date(now.setHours(24, 0, 0));
-
-    since.setMilliseconds(0);
-    until.setMilliseconds(0);
-
-    return {
-        since: since,
-        until: until
-    };
-}
-
-/**
  * check we're still connected to mongo. kill process on error
  * @function check_mongo_connection
  */
@@ -102,17 +81,19 @@ module.exports.check_mongo_connection = function () {
 /**
  * gets code/commit data from github for the past day
  * @function get_code
+ * @param {Function} filters
  */
-module.exports.get_code = function () {
-    get_github_data(me.data, github, today());
+module.exports.get_code = function (filters) {
+    get_github_data(me.data, github, filters());
 };
 
 /**
  * gets song data from last.fm for the past day
  * @function get_songs
+ * @param {Function} filters
  */
-module.exports.get_songs = function () {
-    get_lastfm_data(me.data, lastfm, today());
+module.exports.get_songs = function (filters) {
+    get_lastfm_data(me.data, lastfm, filters());
 };
 
 /**
@@ -134,7 +115,8 @@ module.exports.get_sleep_cycle = function () {
 /**
  * gets weight and steps data from fitbit
  * @function get_activities
+ * @param {Function} filters
  */
-module.exports.get_activities = function () {
-    get_fitbit_data(me.data, fitbit, today());
+module.exports.get_activities = function (filters) {
+    get_fitbit_data(me.data, fitbit, filters());
 };

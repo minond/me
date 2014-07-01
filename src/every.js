@@ -14,8 +14,8 @@ var SECOND = 1000,
  * @return {Function}
  */
 function repeat (timeout) {
-    return function run (action) {
-        action();
+    return function run (action, args) {
+        action.apply(null, args || []);
         setTimeout(function () {
             run(action);
         }, timeout);
