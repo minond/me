@@ -82,8 +82,8 @@ Api.request = function (url, arglist) {
  * @param {Object} [fields]
  * @return {Object}
  */
-Api.prototype.$options = function (path, fields) {
-    return {};
+Api.prototype.$options = function () {
+    throw new Error('Method not implemented');
 };
 
 module.exports = Api;
