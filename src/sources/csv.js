@@ -1,6 +1,6 @@
 'use strict';
 
-var File = require('./file');
+var File = require('./base/file');
 
 var Q = require('q'),
     lodash = require('lodash'),

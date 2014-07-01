@@ -10,7 +10,7 @@ var URL_BASE = 'api.github.com',
         'per_page=100&' +
         'page=${ page }';
 
-var Api = require('./api'),
+var Api = require('./base/api'),
     lodash = require('lodash'),
     util = require('util');
 

@@ -11,7 +11,7 @@ var URL_BASE = 'ws.audioscrobbler.com',
         'from=${ since.getTime() }&' +
         'to=${ until.getTime() }';
 
-var Api = require('./api'),
+var Api = require('./base/api'),
     lodash = require('lodash'),
     util = require('util');
 
