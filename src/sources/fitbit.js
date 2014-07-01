@@ -41,7 +41,7 @@ function api_request (url, arglist) {
     return function () {
         var deferred = Q.defer();
 
-        function complete (err, data, res) {
+        function complete (err, data) {
             if (err) {
                 deferred.reject(err);
                 return;

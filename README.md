@@ -5,27 +5,33 @@ Gather information about myself so that I can graph and analyze it.
 
 ## getting started
 ```sh
+# installing
 npm install
+
+# staring data sync
 npm start
+
+# running tests and quality checks
+npm test
 ```
 
 ## data
-### current sources
+#### current sources
 * fitbit
 * github
 * lastfm
 * sleep cycle app
 * weather information
 
-### future sources
+#### future sources
 * youtube
 * air quality
 * anything else
 
 ## todo
+1. tests
 1. server
 2. display data
-3. test getters and apis
-4. summary view job
-5. metadata job
-6. complete 'future sources'
+3. summary view job
+4. metadata job
+5. complete 'future sources'

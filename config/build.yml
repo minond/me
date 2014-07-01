@@ -1,0 +1,28 @@
+# defaults for a js app
+aliases:
+  default:
+    - 'ci'
+  ci:
+    - 'clean'
+    - 'prepare'
+    - 'quality'
+    - 'test'
+  test:
+    - 'test:unit'
+  test:unit:
+    - 'exec:mocha'
+  quality:
+    - 'prepare'
+    - 'complexity:all'
+    - 'htmlhint:all'
+    - 'jshint:all'
+    - 'jshint:report'
+    - 'spell'
+  documentation:
+    - 'yuidoc:all'
+    - 'apidoc:all'
+
+files:
+  js:
+    dir: src
+    all: src/**/*.js
