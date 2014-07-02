@@ -13,7 +13,7 @@ npm install
 # staring data sync
 npm start
 
-# running tests and quality checks
+# running tests and linters
 npm test
 ```
 

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('entry class', function () {
+describe('Entry', function () {
     var entry, data;
 
     var Entry = require('../../../src/entry'),
