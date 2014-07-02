@@ -191,6 +191,10 @@ Entry.INFO = {
         type: Entry.schema.types.HEALTH,
         source: 'Fitbit Aria'
     },
+    water: {
+        type: Entry.schema.types.HEALTH,
+        source: 'Fitbit App'
+    },
     steps: {
         type: Entry.schema.types.HEALTH,
         source: 'Fitbit One'

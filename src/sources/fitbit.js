@@ -1,13 +1,16 @@
 'use strict';
 
+var TMPL_DATE = '/date/' +
+    '${ date.getFullYear() }-' +
+    '${ date.getMonth() + 1 }-' +
+    '${ date.getDate() }.json';
+
 var URL_BASE = 'https://api.fitbit.com/',
     URL_REQUEST_TOKEN = URL_BASE + 'oauth/request_token',
     URL_ACCESS_TOKEN = URL_BASE + 'oauth/access_token',
     URL_USER_PROFILE = URL_BASE + '1/user/-/profile.json',
-    URL_USER_ACTIVITIES = URL_BASE + '1/user/-/activities/date/' +
-        '${ date.getFullYear() }-' +
-        '${ date.getMonth() + 1 }-' +
-        '${ date.getDate() }.json';
+    URL_USER_ACTIVITIES = URL_BASE + '1/user/-/activities' + TMPL_DATE,
+    URL_USER_WATER = URL_BASE + '1/user/-/foods/log/water' + TMPL_DATE;
 
 var FITBIT_API_VERSION = '1.0',
     FITBIT_API_SIGNATIRE_METHOD = 'HMAC-SHA1';
@@ -111,5 +114,13 @@ Fitbit.prototype.profile = api_request(URL_USER_PROFILE);
  * @return {Q.Promise}
  */
 Fitbit.prototype.activities = api_request(URL_USER_ACTIVITIES, ['date']);
+
+/**
+ * @link https://wiki.fitbit.com/display/API/API-Get-Water
+ * @method water
+ * @param {Date} date
+ * @return {Q.Promise}
+ */
+Fitbit.prototype.water = api_request(URL_USER_WATER, ['date']);
 
 module.exports = Fitbit;

@@ -1,5 +1,10 @@
 'use strict';
 
+// milliliters to fluid ounces
+// kl to lbs
+var ML2FL = 29.57,
+    KL2LBS = 2.2046;
+
 var Entry = require('../entry'),
     log = require('debug')('fitbit:getter');
 
@@ -20,30 +25,30 @@ module.exports = function get_fitbit_data (storage, fitbit, filters) {
         ].join('');
 
     /**
-     * res.summary should look like this:
-     * {
-     *     activeScore: -1,
-     *     activityCalories: 747,
-     *     caloriesBMR: 1775,
-     *     caloriesOut: 2285,
-     *     distances: [
-     *         { activity: 'total', distance: 2.11 },
-     *         { activity: 'tracker', distance: 2.11 },
-     *         { activity: 'loggedActivities', distance: 0 },
-     *         { activity: 'veryActive', distance: 0.11 },
-     *         { activity: 'moderatelyActive', distance: 1.6 },
-     *         { activity: 'lightlyActive', distance: 0.39 },
-     *         { activity: 'sedentaryActive', distance: 0.01 }
-     *     ],
-     *     elevation: 27.43,
-     *     fairlyActiveMinutes: 65,
-     *     floors: 9,
-     *     lightlyActiveMinutes: 125,
-     *     marginalCalories: 447,
-     *     sedentaryMinutes: 1226,
-     *     steps: 2738,
-     *     veryActiveMinutes: 2
-     * }
+     * @example res.summary
+     *     {
+     *         activeScore: -1,
+     *         activityCalories: 747,
+     *         caloriesBMR: 1775,
+     *         caloriesOut: 2285,
+     *         distances: [
+     *             { activity: 'total', distance: 2.11 },
+     *             { activity: 'tracker', distance: 2.11 },
+     *             { activity: 'loggedActivities', distance: 0 },
+     *             { activity: 'veryActive', distance: 0.11 },
+     *             { activity: 'moderatelyActive', distance: 1.6 },
+     *             { activity: 'lightlyActive', distance: 0.39 },
+     *             { activity: 'sedentaryActive', distance: 0.01 }
+     *         ],
+     *         elevation: 27.43,
+     *         fairlyActiveMinutes: 65,
+     *         floors: 9,
+     *         lightlyActiveMinutes: 125,
+     *         marginalCalories: 447,
+     *         sedentaryMinutes: 1226,
+     *         steps: 2738,
+     *         veryActiveMinutes: 2
+     *     }
      *
      * @function parse_activies
      * handles response from fitbit.activities call
@@ -79,7 +84,37 @@ module.exports = function get_fitbit_data (storage, fitbit, filters) {
      */
     function parse_profile (res) {
         var entry = new Entry('weight', suid, {
-            weight: Math.ceil(res.user.weight * 2.2046)
+            weight: Math.ceil(res.user.weight * KL2LBS)
+        });
+
+        entry.dtstamp = date;
+        log('saving %s', entry.id());
+        storage.upsert(entry);
+    }
+
+    /**
+     * values are in milliliters
+     * @example res
+     *     {
+     *         summary: {
+     *             water: 2392.5
+     *         },
+     *         water: [
+     *             { amount: 499.79998779296875, logId: 404295773 },
+     *             { amount: 118.30000305175781, logId: 404481832 },
+     *             { amount: 591.5, logId: 404561705 },
+     *             { amount: 591.5, logId: 404699366 },
+     *             { amount: 591.5, logId: 404767731 }
+     *         ]
+     *     }
+     *
+     * @function parse_water
+     * handles response from fitbit.water call
+     * @param {Object} res
+     */
+    function parse_water (res) {
+        var entry = new Entry('water', suid, {
+            fl: Math.round(res.summary.water / ML2FL * 100) / 100
         });
 
         entry.dtstamp = date;
@@ -89,5 +124,6 @@ module.exports = function get_fitbit_data (storage, fitbit, filters) {
 
     log('getting health data for %s', date);
     fitbit.activities(date).then(parse_activies);
+    fitbit.water(date).then(parse_water);
     fitbit.profile().then(parse_profile);
 };
