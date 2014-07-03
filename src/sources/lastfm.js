@@ -25,12 +25,6 @@ function Lastfm (username, token) {
     Api.call(this);
 
     /**
-     * @property $proxy
-     * @type {Object}
-     */
-    this.$proxy = require('http');
-
-    /**
      * @property $log
      * @type {Function}
      */
@@ -45,31 +39,31 @@ function Lastfm (username, token) {
         username: username,
         token: token
     };
-
-    /**
-     * includes token in url
-     *
-     * @function get_options
-     * @param {string} path url path. can be a lodash template string
-     * @param {Object} [fields]
-     * @return {Object}
-     */
-    this.$options = function (method, fields) {
-        fields = lodash.defaults(fields || {}, {
-            token: this.$user.token,
-            username: this.$user.username,
-            method: method,
-            page: 1
-        });
-
-        return {
-            host: URL_BASE,
-            path: lodash.template(URL_METHOD, fields)
-        };
-    };
 }
 
 util.inherits(Lastfm, Api);
+
+/**
+ * includes token in url
+ *
+ * @function get_options
+ * @param {string} path url path. can be a lodash template string
+ * @param {Object} [fields]
+ * @return {Object}
+ */
+Lastfm.prototype.$options = function (method, fields) {
+    fields = lodash.defaults(fields || {}, {
+        token: this.$user.token,
+        username: this.$user.username,
+        method: method,
+        page: 1
+    });
+
+    return {
+        host: URL_BASE,
+        path: lodash.template(URL_METHOD, fields)
+    };
+};
 
 /**
  * gets recently played tracks
@@ -81,6 +75,6 @@ util.inherits(Lastfm, Api);
  * @param {int} [page]
  * @return {Q.Promise}
  */
-Lastfm.prototype.getrecenttracks = Api.request(METHOD_USER_GET_RECENT_TRACKS, ['since', 'until', 'page']);
+Lastfm.prototype.getrecenttracks = Api.request.http(METHOD_USER_GET_RECENT_TRACKS, ['since', 'until', 'page']);
 
 module.exports = Lastfm;

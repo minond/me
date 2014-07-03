@@ -38,33 +38,33 @@ function Github (username, token) {
         username: username,
         token: token
     };
-
-    /**
-     * includes github tokens/username
-     *
-     * @method $options
-     * @param {string} path url path. can be a lodash template string
-     * @param {Object} [fields]
-     * @return {Object}
-     */
-    this.$options = function (path, fields) {
-        fields = lodash.defaults(fields || {}, {
-            user: this.$user,
-            page: 1
-        });
-
-        return {
-            host: URL_BASE,
-            path: lodash.template(path, fields),
-            auth: this.$user.token + ':x-oauth-basic',
-            headers: {
-                'User-Agent': this.$user.username
-            }
-        };
-    };
 }
 
 util.inherits(Github, Api);
+
+/**
+ * includes github tokens/username
+ *
+ * @method $options
+ * @param {string} path url path. can be a lodash template string
+ * @param {Object} [fields]
+ * @return {Object}
+ */
+Github.prototype.$options = function (path, fields) {
+    fields = lodash.defaults(fields || {}, {
+        user: this.$user,
+        page: 1
+    });
+
+    return {
+        host: URL_BASE,
+        path: lodash.template(path, fields),
+        auth: this.$user.token + ':x-oauth-basic',
+        headers: {
+            'User-Agent': this.$user.username
+        }
+    };
+};
 
 /**
  * gets all repos for user
@@ -72,7 +72,7 @@ util.inherits(Github, Api);
  * @method repos
  * @return {Q.Promise}
  */
-Github.prototype.repos = Api.request(URL_REPOSITORIES);
+Github.prototype.repos = Api.request.https(URL_REPOSITORIES);
 
 /**
  * gets commits for repo within time period
@@ -84,7 +84,7 @@ Github.prototype.repos = Api.request(URL_REPOSITORIES);
  * @param {int} [page]
  * @return {Q.Promise}
  */
-Github.prototype.commits = Api.request(URL_COMMITS, ['repo', 'since', 'until', 'page']);
+Github.prototype.commits = Api.request.https(URL_COMMITS, ['repo', 'since', 'until', 'page']);
 
 /**
  * gets a single commit
@@ -94,6 +94,6 @@ Github.prototype.commits = Api.request(URL_COMMITS, ['repo', 'since', 'until', '
  * @param {Object} commit
  * @return {Q.Promise}
  */
-Github.prototype.commit = Api.request(URL_COMMIT, ['repo', 'commit']);
+Github.prototype.commit = Api.request.https(URL_COMMIT, ['repo', 'commit']);
 
 module.exports = Github;

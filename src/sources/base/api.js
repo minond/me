@@ -20,46 +20,39 @@ function resolve (deferred, buffers) {
 }
 
 /**
- * @constructor
- * @class Api
+ * generates parameters for request functions
+ * @function params
+ * @param {Array} arglist expected arguments (ie. date, page, username, etc.)
+ * @param {Array} args parameters passed to function
+ * @return {Object}
  */
-function Api () {
-    /**
-     * @property $proxy
-     * @type {Object}
-     */
-    this.$proxy = require('https');
+function params (arglist, args) {
+    var data = {};
+
+    lodash.each(arglist, function (val, index) {
+        data[ val ] = args[ index ];
+    });
+
+    return data;
 }
 
 /**
  * generates an api call method
  *
- * @method request
- * @static
+ * @function get
  * @param {string} url the end point (not including the base)
- * @param {Array} [arglist] optional arguments passed into the method and req
+ * @param {Array} arglist arguments passed into the method and req
+ * @param {Object} proxy client used to make request
  * @return {Function}
  */
-Api.request = function (url, arglist) {
-    arglist = arglist || [];
-
-    function fields (args) {
-        var data = {};
-
-        lodash.each(args, function (val, index) {
-            data[ arglist[ index ] ] = val;
-        });
-
-        return data;
-    }
-
+function get (url, arglist, proxy) {
     return function () {
         var deferred = Q.defer(),
-            options = this.$options(url, fields(arguments)),
+            options = this.$options(url, params(arglist, arguments)),
             log = this.$log;
 
         log('requesting %s', options.path);
-        this.$proxy.get(options, function (res) {
+        proxy.get(options, function (res) {
             var buffers = [];
 
             log('downloading %s', options.path);
@@ -72,6 +65,46 @@ Api.request = function (url, arglist) {
 
         return deferred.promise;
     };
+}
+
+/**
+ * @constructor
+ * @class Api
+ */
+function Api () {
+}
+
+/**
+ * api request function generators
+ * @property request
+ * @type {Object}
+ */
+Api.request = {};
+
+/**
+ * generates an api call method using http
+ *
+ * @method request.http
+ * @static
+ * @param {string} url the end point (not including the base)
+ * @param {Array} [arglist] optional arguments passed into the method and req
+ * @return {Function}
+ */
+Api.request.http = function (url, arglist) {
+    return get(url, arglist, require('http'));
+};
+
+/**
+ * generates an api call method using https
+ *
+ * @method request.https
+ * @static
+ * @param {string} url the end point (not including the base)
+ * @param {Array} [arglist] optional arguments passed into the method and req
+ * @return {Function}
+ */
+Api.request.https = function (url, arglist) {
+    return get(url, arglist, require('https'));
 };
 
 /**
