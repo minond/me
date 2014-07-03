@@ -1,6 +1,7 @@
 'use strict';
 
 var Q = require('q'),
+    OAuth = require('oauth').OAuth,
     lodash = require('lodash');
 
 /**
@@ -10,12 +11,34 @@ var Q = require('q'),
  * @function resolve
  * @param {Q.deferred} deferred
  * @param {Array} buffers
+ * @param {Function} log
  * @return {Function}
  */
-function resolve (deferred, buffers) {
+function resolve (deferred, buffers, log) {
     return function () {
         var joined = JSON.parse(buffers.join(''));
+        log('resolving request');
         deferred.resolve(joined);
+    };
+}
+
+/**
+ * returns a function that is used to resolve completed requests
+ *
+ * @function complete
+ * @param {Q.deferred} deferred
+ * @param {Function} log
+ * @return {Function}
+ */
+function complete (deferred, log) {
+    return function (err, data) {
+        if (err) {
+            log('reject request');
+            deferred.reject(err);
+        } else {
+            log('resolving request');
+            deferred.resolve(JSON.parse(data));
+        }
     };
 }
 
@@ -57,7 +80,7 @@ function get (url, arglist, proxy) {
 
             log('downloading %s', options.path);
             res.on('data', buffers.push.bind(buffers));
-            res.on('end', resolve(deferred, buffers));
+            res.on('end', resolve(deferred, buffers, log));
         }).on('error', function (err) {
             log('error getting %s', options.path);
             deferred.reject(err);
@@ -72,6 +95,17 @@ function get (url, arglist, proxy) {
  * @class Api
  */
 function Api () {
+    /**
+     * @property $oauth
+     * @type {OAuth}
+     */
+    this.$oauth = null;
+
+    /**
+     * @property $log
+     * @type {Function}
+     */
+    this.$log = require('debug')('base:api');
 }
 
 /**
@@ -105,6 +139,42 @@ Api.request.http = function (url, arglist) {
  */
 Api.request.https = function (url, arglist) {
     return get(url, arglist, require('https'));
+};
+
+/**
+ * generates an api call method using oauth
+ *
+ * @method request.oauth
+ * @parma {string} url the end point (not including the base)
+ * @param {Array} [arglist] optional arguments passed into the method and req
+ * @return {Function}
+ */
+Api.request.oauth = function (url, arglist) {
+    return function () {
+        var deferred = Q.defer();
+
+        if (!this.$oauth) {
+            this.$oauth = new OAuth(
+                this.$auth.request_token_url,
+                this.$auth.request_access_url,
+                this.$auth.consumer_key,
+                this.$auth.application_secret,
+                this.$auth.api_version,
+                null,
+                this.$auth.signature_method
+            );
+        }
+
+        this.$log('requesting %s', lodash.template(url, params(arglist, arguments)));
+        this.$oauth.get(
+            lodash.template(url, params(arglist, arguments)),
+            this.$auth.user_token,
+            this.$auth.user_secret,
+            complete(deferred, this.$log)
+        );
+
+        return deferred.promise;
+    };
 };
 
 /**
