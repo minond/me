@@ -31,7 +31,7 @@ var Entry = require('../src/entry');
  * @param {Object} query mongo query
  */
 function query (req, res, collection, query) {
-    collection.find(query, function (err, documents) {
+    collection.find(query).sort({ dtstamp: 1 }, function (err, documents) {
         res.json(payload(query, err, documents));
     });
 }
