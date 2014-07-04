@@ -27,5 +27,5 @@ files:
     dir: src
     all: src/**/*.js
   views:
-    dir: views
-    all: views/**/*.html
+    dir: public/views
+    all: public/views/**/*.html

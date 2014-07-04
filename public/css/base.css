@@ -1,0 +1,16 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic);
+
+body {
+    background-color: #faf2e1;
+    cursor: default;
+    font-family: 'Droid Serif', serif;
+    font-size: 1em;
+    height: 100%;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.content {
+    margin: 4em 8em;
+    width: 56em;
+}

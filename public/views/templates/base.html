@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <base href="/" />
+        <title>{{ title || "marcos minond" }}</title>
+
+        <link rel="stylesheet" href="public/vendor/normalize-css/normalize.css" />
+        <link rel="stylesheet" href="public/css/base.css" />
+    </head>
+    <body>
+        <script type="text/javascript" src="public/vendor/modernizr/modernizr.js"></script>
+        {% spaceless %}
+            <div class="content">
+            {% block content %}
+            {% endblock %}
+            </div>
+        {% endspaceless %}
+        <script type="text/javascript" src="public/vendor/d3/d3.min.js"></script>
+        <script type="text/javascript" src="public/vendor/crossfilter/crossfilter.min.js"></script>
+        <script type="text/javascript" src="public/vendor/dc.js/dc.min.js"></script>
+    </body>
+</html>
