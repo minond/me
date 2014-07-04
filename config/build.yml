@@ -26,3 +26,6 @@ files:
   js:
     dir: src
     all: src/**/*.js
+  views:
+    dir: views
+    all: views/**/*.html
