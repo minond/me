@@ -1,7 +1,7 @@
 module.exports = {
     github: {
-        user: process.env.GITHUB_OAUTH_USER,
-        key: process.env.GITHUB_OAUTH_TOKEN
+        user: process.env.GITHUB_USER,
+        key: process.env.GITHUB_TOKEN
     },
 
     lastfm: {
@@ -17,10 +17,10 @@ module.exports = {
     },
 
     sleep_cycle: {
-        files: process.env.HOME + '/Downloads/sleepdata*'
+        files: process.env.SLEEP_CYCLE_GLOB
     },
 
     weather: {
-        static_location: 'Provo, UT'
+        static_location: process.env.MY_STATIC_LOCATION
     }
 };

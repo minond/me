@@ -18,7 +18,9 @@
     "debug": "~1.0.2",
     "glob": "~4.0.2",
     "csv": "~0.4.0",
-    "oauth": "~0.9.12"
+    "oauth": "~0.9.12",
+    "express": "~4.4.5",
+    "swig": "~1.4.1"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
