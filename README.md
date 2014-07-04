@@ -13,8 +13,11 @@ npm install
 # running tests and linters
 npm test
 
-# staring data sync
-npm start
+# staring data sync (set DEBUG=* to see debugging output)
+foreman start worker
+
+# starting web server
+foreman start server
 ```
 
 Make sure to set the environment variables used in `config/getters.js` and
