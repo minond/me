@@ -9,6 +9,7 @@ Gather information about myself so that I can graph and analyze it.
 ```sh
 # installing
 npm install
+bower install
 
 # running tests and linters
 npm test
