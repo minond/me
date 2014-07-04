@@ -172,8 +172,7 @@ Entry.schema = {
     types: {
         HEALTH: 'health',
         ACTION: 'action',
-        ENVIRONMENT: 'environment',
-        METADATA: 'metadata'
+        ENVIRONMENT: 'environment'
     }
 };
 
@@ -213,4 +212,5 @@ Entry.INFO = {
     }
 };
 
+Entry.schema.labels = Entry.INFO;
 module.exports = Entry;
