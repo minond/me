@@ -72,22 +72,18 @@
  * @constructor
  * @class Entry
  * @throws Error
- * @param {string} [label]
+ * @param {string} label
  * @param {string} [suid]
- * @param {Object} data
+ * @param {Object} [data]
  */
 function Entry (label, suid, data) {
-    if (!data && !suid) {
-        data = label;
-        label = undefined;
-        suid = undefined;
-    } else if (!data) {
+    if (!data && suid) {
         data = suid;
         suid = undefined;
     }
 
     if (!(label in Entry.schema.labels)) {
-        throw new Error('Invalid entry type: ' + label);
+        throw new Error('Invalid entry label: ' + label);
     }
 
     /**

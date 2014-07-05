@@ -7,7 +7,7 @@ describe('Entry', function () {
         expect = require('expect.js');
 
     beforeEach(function () {
-        entry = new Entry();
+        entry = new Entry('song', {});
         data = { name: 'hihi' };
     });
 
@@ -27,24 +27,29 @@ describe('Entry', function () {
             expect(entry.suid).to.not.be(undefined);
         });
 
-        it('makes the suid and label optional', function () {
-            entry = new Entry(data);
-            expect(entry.label).to.be(undefined);
-            expect(entry.data).to.be(data);
-            expect(entry.suid).to.not.be(null);
-            expect(entry.suid).to.not.be(undefined);
+        it('makes the data optional', function () {
+            entry = new Entry('song');
+            expect(entry.label).to.be('song');
+            expect(entry.data).to.be.an('object');
         });
 
         it('always gets a suid', function () {
-            entry = new Entry();
             expect(entry.suid).to.not.be(null);
             expect(entry.suid).to.not.be(undefined);
         });
 
         it('includes preset information about the entry type', function () {
             entry = new Entry('song', data);
-            expect(entry.type).to.be(Entry.INFO.song.type);
-            expect(entry.source).to.be(Entry.INFO.song.source);
+            expect(entry.type).to.be(Entry.schema.types.ACTION);
+        });
+
+        it('throws an error when an invalid label is passed', function () {
+            expect(function () {
+                return new Entry('invalid');
+            }).to.throwException(function (err) {
+                expect(err).to.be.an(Error);
+                expect(err.message).to.be('Invalid entry label: invalid');
+            });
         });
     });
 
