@@ -43,6 +43,7 @@ module.exports = function get_lastfm_data (storage, lastfm, filters) {
                     }
                 });
 
+                entry.source = 'last.fm';
                 entry.dtstamp = dtstamp;
                 log('saving %s', entry.id());
                 storage.upsert(entry);

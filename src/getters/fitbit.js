@@ -72,6 +72,7 @@ module.exports = function get_fitbit_data (storage, fitbit, filters) {
             }
         });
 
+        entry.source = 'Fitbit One';
         entry.dtstamp = date;
         log('saving %s', entry.id());
         storage.upsert(entry);
@@ -87,6 +88,7 @@ module.exports = function get_fitbit_data (storage, fitbit, filters) {
             weight: Math.ceil(res.user.weight * KL2LBS)
         });
 
+        entry.source = 'Fitbit Aria';
         entry.dtstamp = date;
         log('saving %s', entry.id());
         storage.upsert(entry);
@@ -117,6 +119,7 @@ module.exports = function get_fitbit_data (storage, fitbit, filters) {
             fl: Math.round(res.summary.water / ML2FL * 100) / 100
         });
 
+        entry.source = 'Fitbit App';
         entry.dtstamp = date;
         log('saving %s', entry.id());
         storage.upsert(entry);

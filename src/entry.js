@@ -6,16 +6,13 @@
  *         "label": "a unique identifier of this type of entry",
  *         "type": "type of data",
  *         "source": "where I'm getting this data from",
- *         "dtstamp_since": "data covers the time period from",
- *         "dtstamp_until": "data covers the time period to",
  *         "dtstamp": "data is on this time"
  *     }
  *
  *     "types": {
  *         "environment": "things around me I cannot control",
  *         "health": "health related actions (sleep, steps, etc.)",
- *         "action": "things I do",
- *         "metadata": "information/data about information/data"
+ *         "action": "things I do"
  *     }
  *
  *     "examples": [
@@ -74,6 +71,7 @@
 /**
  * @constructor
  * @class Entry
+ * @throws Error
  * @param {string} [label]
  * @param {string} [suid]
  * @param {Object} data
@@ -90,12 +88,16 @@ function Entry (label, suid, data) {
         suid = undefined;
     }
 
+    if (!(label in Entry.schema.labels)) {
+        throw new Error('Invalid entry type: ' + label);
+    }
+
     /**
      * @property type
      * @type {string}
      * @see Entry.schema.types
      */
-    this.type = null;
+    this.type = Entry.schema.labels[ label ];
 
     /**
      * @property source
@@ -127,12 +129,6 @@ function Entry (label, suid, data) {
      * @type {string}
      */
     this.suid = suid || Math.random().toString().substr(-10);
-
-    if (label in Entry.INFO) {
-        info = Entry.INFO[ label ];
-        this.type = info.type;
-        this.source = info.source;
-    }
 }
 
 /**
@@ -168,49 +164,32 @@ Entry.prototype.json = function () {
  * @final
  * @type {Object}
  */
-Entry.schema = {
-    types: {
-        HEALTH: 'health',
-        ACTION: 'action',
-        ENVIRONMENT: 'environment'
-    }
-};
+Entry.schema = {};
 
 /**
- * @property schema
+ * @property schema.types
  * @final
  * @type {Object}
  */
-Entry.INFO = {
-    sleep: {
-        type: Entry.schema.types.HEALTH,
-        source: 'Sleep Cycle App'
-    },
-    weight: {
-        type: Entry.schema.types.HEALTH,
-        source: 'Fitbit Aria'
-    },
-    water: {
-        type: Entry.schema.types.HEALTH,
-        source: 'Fitbit App'
-    },
-    steps: {
-        type: Entry.schema.types.HEALTH,
-        source: 'Fitbit One'
-    },
-    weather: {
-        type: Entry.schema.types.ENVIRONMENT,
-        source: 'msn.com'
-    },
-    commit: {
-        type: Entry.schema.types.ACTION,
-        source: 'github.com'
-    },
-    song: {
-        type: Entry.schema.types.ACTION,
-        source: 'last.fm'
-    }
+Entry.schema.types = {
+    ACTION: 'action',
+    ENVIRONMENT: 'environment',
+    HEALTH: 'health'
 };
 
-Entry.schema.labels = Entry.INFO;
+/**
+ * @property schema.labels
+ * @final
+ * @type {Object}
+ */
+Entry.schema.labels = {
+    commit: Entry.schema.types.ACTION,
+    sleep: Entry.schema.types.HEALTH,
+    song: Entry.schema.types.ACTION,
+    steps: Entry.schema.types.HEALTH,
+    water: Entry.schema.types.HEALTH,
+    weather: Entry.schema.types.ENVIRONMENT,
+    weight: Entry.schema.types.HEALTH
+};
+
 module.exports = Entry;

@@ -46,6 +46,7 @@ module.exports = function get_sleep_cycle_data (storage, sleep_data) {
                     .split(':'),
             });
 
+            entry.source = 'Sleep Cycle App';
             entry.dtstamp = end;
             log('saving %s', entry.id());
             storage.upsert(entry);

@@ -57,6 +57,7 @@ module.exports = function get_github_data (storage, github, filters) {
                                 });
                             }
 
+                            entry.source = 'github.com';
                             entry.dtstamp = new Date(commit.commit.author.date);
                             log('saving %s', entry.id());
                             storage.upsert(entry);

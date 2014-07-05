@@ -25,6 +25,7 @@ module.exports = function get_weather_data (storage, weather) {
             windspeed: data.current.windspeed
         });
 
+        entry.source = 'msn.com';
         entry.dtstamp = dtstamp;
         log('saving %s', entry.id());
         storage.upsert(entry);
