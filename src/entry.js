@@ -77,8 +77,6 @@
  * @param {Object} data
  */
 function Entry (label, suid, data) {
-    var info;
-
     if (!data && !suid) {
         data = label;
         label = undefined;

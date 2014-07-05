@@ -1,7 +1,8 @@
 @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic);
 
+/* content */
 body {
-    background-color: #faf2e1;
+    background-color: #fff8e8;
     cursor: default;
     font-family: 'Droid Serif', serif;
     font-size: 1em;
@@ -13,4 +14,31 @@ body {
 .content {
     margin: 4em 8em;
     width: 56em;
+}
+
+/* charts */
+.dc-chart text {
+    font: 12px monospace;
+    text-transform: lowercase;
+}
+
+.dc-chart g path:hover {
+    cursor: pointer;
+    fill-opacity: 0.8;
+}
+
+.dc-chart g rect {
+    fill: rgb(214, 226, 219);
+}
+
+.dc-chart .axis path,
+.dc-chart .axis line {
+    fill: none;
+    shape-rendering: crispEdges;
+    stroke: #000;
+}
+
+.dc-chart line.grid-line {
+    opacity: .5;
+    stroke: #ccc;
 }

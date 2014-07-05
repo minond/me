@@ -14,7 +14,8 @@ aliases:
   quality:
     - 'prepare'
     - 'complexity:all'
-    - 'htmlhint:all'
+    # not playing nice with swig files
+    # - 'htmlhint:all'
     - 'jshint:all'
     - 'jshint:report'
     - 'spell'
@@ -23,6 +24,7 @@ aliases:
     - 'apidoc:all'
 
 files:
+  # TODO lint js in public
   js:
     dir: src
     all: src/**/*.js
