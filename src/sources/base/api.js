@@ -63,6 +63,7 @@ function params (arglist, args) {
  * generates an api call method
  *
  * @function http_request
+ * @param {string} method
  * @param {string} url the end point (not including the base)
  * @param {Array} arglist arguments passed into the method and req
  * @param {Object} proxy client used to make request
@@ -94,12 +95,12 @@ function http_request (method, url, arglist, proxy) {
  * generates an oauth api call method
  *
  * @function oauth_request
+ * @param {string} method
  * @param {string} url the end point (not including the base)
  * @param {Array} arglist arguments passed into the method and req
- * @param {Object} proxy client used to make request
  * @return {Function}
  */
-function oauth_request (method, url, arglist, proxy) {
+function oauth_request (method, url, arglist) {
     return function () {
         var deferred = Q.defer();
 
@@ -191,7 +192,7 @@ Api.request.https.get = function (url, arglist) {
  * @return {Function}
  */
 Api.request.oauth.get = function (url, arglist) {
-    return oauth_request('get', url, arglist, this.$oauth);
+    return oauth_request('get', url, arglist);
 };
 
 /**
