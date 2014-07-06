@@ -64,7 +64,7 @@ util.inherits(Fitbit, Api);
  * @method profile
  * @return {Q.Promise}
  */
-Fitbit.prototype.profile = Api.request.oauth(URL_USER_PROFILE);
+Fitbit.prototype.profile = Api.request.oauth.get(URL_USER_PROFILE);
 
 /**
  * @link https://wiki.fitbit.com/display/API/API-Get-Activities
@@ -72,7 +72,7 @@ Fitbit.prototype.profile = Api.request.oauth(URL_USER_PROFILE);
  * @param {Date} date
  * @return {Q.Promise}
  */
-Fitbit.prototype.activities = Api.request.oauth(URL_USER_ACTIVITIES, ['date']);
+Fitbit.prototype.activities = Api.request.oauth.get(URL_USER_ACTIVITIES, ['date']);
 
 /**
  * @link https://wiki.fitbit.com/display/API/API-Get-Water
@@ -80,6 +80,6 @@ Fitbit.prototype.activities = Api.request.oauth(URL_USER_ACTIVITIES, ['date']);
  * @param {Date} date
  * @return {Q.Promise}
  */
-Fitbit.prototype.water = Api.request.oauth(URL_USER_WATER, ['date']);
+Fitbit.prototype.water = Api.request.oauth.get(URL_USER_WATER, ['date']);
 
 module.exports = Fitbit;

@@ -75,6 +75,6 @@ Lastfm.prototype.$options = function (method, fields) {
  * @param {int} [page]
  * @return {Q.Promise}
  */
-Lastfm.prototype.getrecenttracks = Api.request.http(METHOD_USER_GET_RECENT_TRACKS, ['since', 'until', 'page']);
+Lastfm.prototype.getrecenttracks = Api.request.http.get(METHOD_USER_GET_RECENT_TRACKS, ['since', 'until', 'page']);
 
 module.exports = Lastfm;

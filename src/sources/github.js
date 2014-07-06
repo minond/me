@@ -72,7 +72,7 @@ Github.prototype.$options = function (path, fields) {
  * @method repos
  * @return {Q.Promise}
  */
-Github.prototype.repos = Api.request.https(URL_REPOSITORIES);
+Github.prototype.repos = Api.request.https.get(URL_REPOSITORIES);
 
 /**
  * gets commits for repo within time period
@@ -84,7 +84,7 @@ Github.prototype.repos = Api.request.https(URL_REPOSITORIES);
  * @param {int} [page]
  * @return {Q.Promise}
  */
-Github.prototype.commits = Api.request.https(URL_COMMITS, ['repo', 'since', 'until', 'page']);
+Github.prototype.commits = Api.request.https.get(URL_COMMITS, ['repo', 'since', 'until', 'page']);
 
 /**
  * gets a single commit
@@ -94,6 +94,6 @@ Github.prototype.commits = Api.request.https(URL_COMMITS, ['repo', 'since', 'unt
  * @param {Object} commit
  * @return {Q.Promise}
  */
-Github.prototype.commit = Api.request.https(URL_COMMIT, ['repo', 'commit']);
+Github.prototype.commit = Api.request.https.get(URL_COMMIT, ['repo', 'commit']);
 
 module.exports = Github;

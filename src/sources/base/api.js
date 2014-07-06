@@ -62,20 +62,20 @@ function params (arglist, args) {
 /**
  * generates an api call method
  *
- * @function get
+ * @function http_request
  * @param {string} url the end point (not including the base)
  * @param {Array} arglist arguments passed into the method and req
  * @param {Object} proxy client used to make request
  * @return {Function}
  */
-function get (url, arglist, proxy) {
+function http_request (method, url, arglist, proxy) {
     return function () {
         var deferred = Q.defer(),
             options = this.$options(url, params(arglist, arguments)),
             log = this.$log;
 
         log('requesting %s', options.path);
-        proxy.get(options, function (res) {
+        proxy[ method ](options, function (res) {
             var buffers = [];
 
             log('downloading %s', options.path);
@@ -85,6 +85,43 @@ function get (url, arglist, proxy) {
             log('error getting %s', options.path);
             deferred.reject(err);
         });
+
+        return deferred.promise;
+    };
+}
+
+/**
+ * generates an oauth api call method
+ *
+ * @function oauth_request
+ * @param {string} url the end point (not including the base)
+ * @param {Array} arglist arguments passed into the method and req
+ * @param {Object} proxy client used to make request
+ * @return {Function}
+ */
+function oauth_request (method, url, arglist, proxy) {
+    return function () {
+        var deferred = Q.defer();
+
+        if (!this.$oauth) {
+            this.$oauth = new OAuth(
+                this.$auth.request_token_url,
+                this.$auth.request_access_url,
+                this.$auth.consumer_key,
+                this.$auth.application_secret,
+                this.$auth.api_version,
+                null,
+                this.$auth.signature_method
+            );
+        }
+
+        this.$log('requesting %s', lodash.template(url, params(arglist, arguments)));
+        this.$oauth.get(
+            lodash.template(url, params(arglist, arguments)),
+            this.$auth.user_token,
+            this.$auth.user_secret,
+            complete(deferred, this.$log)
+        );
 
         return deferred.promise;
     };
@@ -113,19 +150,23 @@ function Api () {
  * @property request
  * @type {Object}
  */
-Api.request = {};
+Api.request = {
+    http: {},
+    https: {},
+    oauth: {}
+};
 
 /**
  * generates an api call method using http
  *
- * @method request.http
+ * @method request.http.get
  * @static
  * @param {string} url the end point (not including the base)
  * @param {Array} [arglist] optional arguments passed into the method and req
  * @return {Function}
  */
-Api.request.http = function (url, arglist) {
-    return get(url, arglist, require('http'));
+Api.request.http.get = function (url, arglist) {
+    return http_request('get', url, arglist, require('http'));
 };
 
 /**
@@ -137,8 +178,8 @@ Api.request.http = function (url, arglist) {
  * @param {Array} [arglist] optional arguments passed into the method and req
  * @return {Function}
  */
-Api.request.https = function (url, arglist) {
-    return get(url, arglist, require('https'));
+Api.request.https.get = function (url, arglist) {
+    return http_request('get', url, arglist, require('https'));
 };
 
 /**
@@ -149,32 +190,8 @@ Api.request.https = function (url, arglist) {
  * @param {Array} [arglist] optional arguments passed into the method and req
  * @return {Function}
  */
-Api.request.oauth = function (url, arglist) {
-    return function () {
-        var deferred = Q.defer();
-
-        if (!this.$oauth) {
-            this.$oauth = new OAuth(
-                this.$auth.request_token_url,
-                this.$auth.request_access_url,
-                this.$auth.consumer_key,
-                this.$auth.application_secret,
-                this.$auth.api_version,
-                null,
-                this.$auth.signature_method
-            );
-        }
-
-        this.$log('requesting %s', lodash.template(url, params(arglist, arguments)));
-        this.$oauth.get(
-            lodash.template(url, params(arglist, arguments)),
-            this.$auth.user_token,
-            this.$auth.user_secret,
-            complete(deferred, this.$log)
-        );
-
-        return deferred.promise;
-    };
+Api.request.oauth.get = function (url, arglist) {
+    return oauth_request('get', url, arglist, this.$oauth);
 };
 
 /**
