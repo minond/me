@@ -2,10 +2,27 @@
 {% extends "templates/base.html" %}
 
 {% block content %}
+{% raw %}
+    <div ng-app="me" style="float: right">
+        <div ng-controller="HomeController">
+            <div ng-repeat="song in songs | limitTo: 25">
+                <a href="{{ song.data.url }}">
+                    <img ng-src="{{ song.data.img }}" style="height: 30px" />
+                    <span>{{ song.data.name }} by {{ song.data.artist.name }}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div id="charts"></div>
+{% endraw %}
 {% endblock %}
 
 {% block scripts %}
     <script type="text/javascript" src="public/js/stdlib.js"></script>
     <script type="text/javascript" src="public/js/charts.js"></script>
+
+    <script type="text/javascript" src="src/presentation/me/modules/me.js"></script>
+    <script type="text/javascript" src="src/presentation/me/services/entries.js"></script>
+    <script type="text/javascript" src="src/presentation/me/controllers/home.js"></script>
 {% endblock %}

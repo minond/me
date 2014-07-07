@@ -12,7 +12,8 @@
  * @apiError {null} data
  */
 
-var DIR_PUBLIC = __dirname + '/../public/';
+var DIR_PUBLIC = __dirname + '/../public/',
+    DIR_SOURCE = __dirname + '/../src/';
 
 var express = require('express'),
     swig = require('swig'),
@@ -22,19 +23,6 @@ var mongojs = require('mongojs'),
     me = mongojs('me', ['data']);
 
 var Entry = require('../src/entry');
-
-/**
- * @function query
- * @param {http.Request} req
- * @param {http.Response} res
- * @param {Object} collection mongojs collection
- * @param {Object} query mongo query
- */
-function query (req, res, collection, query) {
-    collection.find(query).sort({ dtstamp: 1 }, function (err, documents) {
-        res.json(payload(query, err, documents));
-    });
-}
 
 /**
  * @function payload
@@ -55,7 +43,20 @@ function payload (query, err, documents) {
             query: query
         },
         data: documents
-    }
+    };
+}
+
+/**
+ * @function query
+ * @param {http.Request} req
+ * @param {http.Response} res
+ * @param {Object} collection mongojs collection
+ * @param {Object} filters mongo query filters
+ */
+function query (req, res, collection, filters) {
+    collection.find(filters).sort({ dtstamp: 1 }, function (err, documents) {
+        res.json(payload(filters, err, documents));
+    });
 }
 
 /**
@@ -67,7 +68,7 @@ function payload (query, err, documents) {
 function render (file) {
     return function (req, res) {
         res.render(file);
-    }
+    };
 }
 
 /**
@@ -93,19 +94,28 @@ app.get('/entry/schema', function (req, res) {
  * @apiParam {Int} [since]
  * @apiParam {Int} [until]
  */
-app.get('/entry/query/:type/:label', function (req, res) {
-    query(req, res, me.data, {
-        type: req.params.type,
-        label: req.params.label,
+app.get('/entry/query/:type?/:label?', function (req, res) {
+    var filter = {
         dtstamp: {
             $gte: +req.query.since || 0,
             $lte: +req.query.until || Number.POSITIVE_INFINITY
         }
-    });
+    };
+
+    if (req.params.type) {
+        filter.type = req.params.type;
+    }
+
+    if (req.params.label) {
+        filter.label = req.params.label;
+    }
+
+    query(req, res, me.data, filter);
 });
 
 // index page and static resources
 app.get('/', render('index.html'));
+app.use('/src', express.static(DIR_SOURCE));
 app.use('/public', express.static(DIR_PUBLIC));
 
 // config
