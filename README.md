@@ -6,6 +6,7 @@ me
 Gather information about myself so that I can graph and analyze it.
 
 ## getting started
+#### installing
 ```sh
 # installing
 npm install
@@ -27,6 +28,7 @@ foreman start server
 * [grunt-cli](http://gruntjs.com/getting-started)
 * [foreman](https://github.com/ddollar/foreman)
 
+#### configuring
 Make sure to set the environment variables used in `config/getters.js` and
 modify the contents of `config/schedule.js` to your needs.
 
