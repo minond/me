@@ -3,7 +3,7 @@
 var METHOD_USER_GET_RECENT_TRACKS = 'user.getrecenttracks';
 
 var URL_BASE = 'ws.audioscrobbler.com',
-    URL_METHOD = '/2.0/?format=json&' +
+    URL_METHOD = '/2.0/?format=json&limit=200&' +
         'method=${ method }&' +
         'api_key=${ token }&' +
         'user=${ username }&' +
