@@ -115,6 +115,7 @@ app.get('/entry/query/:type?/:label?', function (req, res) {
 
 // index page and static resources
 app.get('/', render('index.html'));
+app.get('/design', render('design.html'));
 app.use('/src', express.static(DIR_SOURCE));
 app.use('/public', express.static(DIR_PUBLIC));
 

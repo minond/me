@@ -1,19 +1,67 @@
 @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic);
 
-/* content */
+::-moz-selection {
+    background: rgb(214, 226, 219);
+    text-shadow: none;
+}
+
+::selection {
+    background: rgb(214, 226, 219);
+    text-shadow: none;
+}
+
+
 body {
     background-color: #fff8e8;
     cursor: default;
     font-family: 'Droid Serif', serif;
-    font-size: 1em;
+    font-size: .95em;
     height: 100%;
+    margin: 4em auto 15em auto;
     overflow-y: scroll;
+    padding: 0 2em;
+    width: 65em;
+}
+
+hr {
+    border: 1px solid rgb(214, 226, 219);
+}
+
+p {
+    width: 50em;
+}
+
+p.aside {
+    float: right;
+    margin: 0;
+    width: 13em;
+}
+
+a {
+    color: rgb(0, 112, 255);
+    text-decoration: none;
+}
+
+a:hover,
+a:active,
+a:focus {
+    text-decoration: underline;
+}
+
+h1.title {
+    border-bottom: 2px solid rgb(214, 226, 219);
+}
+
+img.half {
+    width: 24.9em;
+}
+
+img.fit {
     width: 100%;
 }
 
-.content {
-    margin: 4em 8em;
-    width: 56em;
+img.align {
+    width: 50em;
 }
 
 /* charts */
