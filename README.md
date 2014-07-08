@@ -6,6 +6,11 @@ me
 Gather information about myself so that I can graph and analyze it.
 
 ## getting started
+#### requirements
+* [node](http://nodejs.org/download/) (tested on v0.10.24)
+* [grunt-cli](http://gruntjs.com/getting-started)
+* [foreman](https://github.com/ddollar/foreman)
+
 #### installing
 ```sh
 # installing
@@ -16,17 +21,12 @@ git submodule update --init
 # running tests and linters
 npm test
 
-# staring data sync (set DEBUG=* to see debugging output)
+# staring data sync
 foreman start worker
 
 # starting web server
 foreman start server
 ```
-
-#### requirements
-* [node](http://nodejs.org/download/) (tested on v0.10.24)
-* [grunt-cli](http://gruntjs.com/getting-started)
-* [foreman](https://github.com/ddollar/foreman)
 
 #### configuring
 Make sure to set the environment variables used in `config/getters.js` and
