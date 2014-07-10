@@ -2,6 +2,8 @@
 
 var Q = require('q'),
     OAuth = require('oauth').OAuth,
+    querystring = require('querystring'),
+    https = require('https'),
     lodash = require('lodash');
 
 /**
@@ -57,6 +59,44 @@ function params (arglist, args) {
     });
 
     return data;
+}
+
+/**
+ * uses a refresh token to get a new access token
+ * @function request_new_access_token
+ * @param {Api} me an instance of an Api object
+ * @param {Function} callback ran after setting access token and expiration
+ */
+function request_new_access_token (me, callback) {
+    var refresh = https.request({
+        method: 'POST',
+        host: me.$auth.refresh_token_url_base,
+        path: me.$auth.refresh_token_url_path,
+        headers: {
+            'Content-type': 'application/x-www-form-urlencoded'
+        }
+    }, function (res) {
+        var buffers = [];
+        res.on('data', buffers.push.bind(buffers));
+        res.on('end', function () {
+            var auth = JSON.parse(buffers.join(''));
+            me.$auth.access_token = auth.access_token;
+            me.$auth.expires_in = Date.now() + auth.expires_in * 1000;
+            callback();
+        });
+    });
+
+    refresh.write(querystring.stringify(me.$refresh()));
+    refresh.end();
+}
+
+/**
+ * checks if a new access token is in need
+ * @param {Api} me an instance of an Api object
+ * @return {boolean}
+ */
+function needs_new_access_token (me) {
+    return !me.$auth.access_token || me.$auth.expires_in <= Date.now();
 }
 
 /**
@@ -129,6 +169,37 @@ function oauth_request (method, url, arglist) {
 }
 
 /**
+ * generates an oauth2 call method
+ *
+ * @function oauth2_request
+ * @param {string} method
+ * @param {string} url the end point (not including the base)
+ * @param {Array} arglist arguments passed into the method and req
+ * @return {Function}
+ */
+function oauth2_request (method, url, arglist) {
+    var request = http_request(method, url, arglist, require('https'));
+
+    return function () {
+        var me = this,
+            args = arguments,
+            deferred = Q.defer();
+
+        if (needs_new_access_token(this)) {
+            request_new_access_token(this, function () {
+                request.apply(me, args).then(function (data) {
+                    deferred.resolve(data);
+                });
+            });
+
+            return deferred.promise;
+        } else {
+            return request.apply(this, arguments);
+        }
+    };
+}
+
+/**
  * @constructor
  * @class Api
  */
@@ -154,7 +225,8 @@ function Api () {
 Api.request = {
     http: {},
     https: {},
-    oauth: {}
+    oauth: {},
+    oauth2: {}
 };
 
 /**
@@ -173,7 +245,7 @@ Api.request.http.get = function (url, arglist) {
 /**
  * generates an api call method using https
  *
- * @method request.https
+ * @method request.https.get
  * @static
  * @param {string} url the end point (not including the base)
  * @param {Array} [arglist] optional arguments passed into the method and req
@@ -186,13 +258,25 @@ Api.request.https.get = function (url, arglist) {
 /**
  * generates an api call method using oauth
  *
- * @method request.oauth
+ * @method request.oauth.get
  * @parma {string} url the end point (not including the base)
  * @param {Array} [arglist] optional arguments passed into the method and req
  * @return {Function}
  */
 Api.request.oauth.get = function (url, arglist) {
     return oauth_request('get', url, arglist);
+};
+
+/**
+ * generates an api call method using oauth2
+ *
+ * @method request.oauth2.get
+ * @parma {string} url the end point (not including the base)
+ * @param {Array} [arglist] optional arguments passed into the method and req
+ * @return {Function}
+ */
+Api.request.oauth2.get = function (url, arglist) {
+    return oauth2_request('get', url, arglist);
 };
 
 /**
@@ -204,6 +288,16 @@ Api.request.oauth.get = function (url, arglist) {
  * @return {Object}
  */
 Api.prototype.$options = function () {
+    throw new Error('Method not implemented');
+};
+
+/**
+ * generates a request options object for a refresh token request
+ *
+ * @method $refresh
+ * @return {Object}
+ */
+Api.prototype.$refresh = function () {
     throw new Error('Method not implemented');
 };
 
