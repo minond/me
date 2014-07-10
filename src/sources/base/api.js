@@ -82,10 +82,12 @@ function request_new_access_token (me, callback) {
             var auth = JSON.parse(buffers.join(''));
             me.$auth.access_token = auth.access_token;
             me.$auth.expires_in = Date.now() + auth.expires_in * 1000;
+            me.$log('new access token expires on %s', new Date(me.$auth.expires_in));
             callback();
         });
     });
 
+    me.$log('requesting new access token');
     refresh.write(querystring.stringify(me.$refresh()));
     refresh.end();
 }
