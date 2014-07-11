@@ -1,10 +1,12 @@
 'use strict';
 
 var URL_ACTIVITIES = '/youtube/v3/activities?' +
-    // 'maxResults=50&' +
     'pageToken=${ args.page }&' +
     'part=${ args.part }&' +
-    'mine=${ args.mine }';
+    'mine=${ args.mine }&' +
+    '<% if (args.since) { %>publishedAfter=${ args.since.toISOString() }&<% } %>' +
+    '<% if (args.until) { %>publishedBefore=${ args.until.toISOString() }&<% } %>' +
+    'maxResults=50';
 
 var Api = require('./base/api'),
     Google = require('./google'),
@@ -40,6 +42,7 @@ util.inherits(YouTube, Google);
 /**
  * @link http://goo.gl/aHuDOq
  * @method activities
+ * @param {Object} args
  * @return {Q.Promise}
  */
 YouTube.prototype.activities = Api.request.oauth2.get(URL_ACTIVITIES, ['args']);
