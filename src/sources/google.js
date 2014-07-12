@@ -97,3 +97,4 @@ Google.prototype.$options = function (path, fields) {
 };
 
 module.exports = Google;
+require('./google/calendar');
