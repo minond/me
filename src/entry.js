@@ -154,6 +154,23 @@ Entry.prototype.json = function () {
 };
 
 /**
+ * generates a suid using a date object
+ * @function date2suid
+ * @static
+ * @param {Date} date
+ * @return {string}
+ */
+Entry.date2suid = function (date) {
+    return [
+        date.getFullYear(),
+        date.getMonth(),
+        date.getFullYear(),
+        date.getDate(),
+        date.getFullYear()
+    ].join('');
+};
+
+/**
  * @property schema
  * @final
  * @type {Object}

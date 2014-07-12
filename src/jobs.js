@@ -9,14 +9,12 @@ var mongojs = require('mongojs'),
 var Github = require('./sources/github'),
     Lastfm = require('./sources/lastfm'),
     Weather = require('./sources/weather'),
-    Fitbit = require('./sources/fitbit'),
     Csv = require('./sources/csv');
 
 // getters
 var get_github_data = require('./getters/github'),
     get_lastfm_data = require('./getters/lastfm'),
     get_weather_data = require('./getters/weather'),
-    get_fitbit_data = require('./getters/fitbit'),
     get_sleep_cycle_data = require('./getters/sleep_cycle');
 
 // connections
@@ -24,12 +22,6 @@ var lastfm = new Lastfm(config.lastfm.user, config.lastfm.key),
     github = new Github(config.github.user, config.github.key),
     weather = new Weather(config.weather.static_location);
 
-var fitbit = new Fitbit({
-    consumer_key: config.fitbit.consumer_key,
-    application_secret: config.fitbit.application_secret,
-    user_token: config.fitbit.user_token,
-    user_secret: config.fitbit.user_secret
-});
 
 var sleep = new Csv(config.sleep_cycle.files, {
     delimiter: ';',
@@ -110,13 +102,4 @@ module.exports.get_weather = function () {
  */
 module.exports.get_sleep_cycle = function () {
     get_sleep_cycle_data(me.data, sleep);
-};
-
-/**
- * gets weight and steps data from fitbit
- * @function get_activities
- * @param {Function} filters
- */
-module.exports.get_activities = function (filters) {
-    get_fitbit_data(me.data, fitbit, filters());
 };

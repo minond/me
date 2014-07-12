@@ -78,4 +78,10 @@ describe('Entry', function () {
             ].join('-'));
         });
     });
+
+    describe('#date2suid', function () {
+        it('generates a string', function () {
+            expect(Entry.date2suid(new Date())).to.be.a('string');
+        });
+    });
 });
