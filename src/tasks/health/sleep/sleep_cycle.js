@@ -1,7 +1,7 @@
 'use strict';
 
-var Entry = require('../entry'),
-    log = require('debug')('sleep_cycle:getter');
+var Entry = require('../../../entry'),
+    log = require('debug')('health:sleep:sleep_cycle:getter');
 
 /**
  * @function get_sleep_cycle_data

@@ -4,7 +4,8 @@ var getter, source, task;
 
 var Github = require('../sources/github'),
     Lastfm = require('../sources/lastfm'),
-    Fitbit = require('../sources/fitbit');
+    Fitbit = require('../sources/fitbit'),
+    Csv = require('../sources/csv');
 
 // var config = require('../../config/application'),
 var config = require('../../config/getters'),
@@ -48,6 +49,10 @@ source = {
         application_secret: config.fitbit.application_secret,
         user_token: config.fitbit.user_token,
         user_secret: config.fitbit.user_secret
+    }),
+    sleep_cycle: new Csv(config.sleep_cycle.files, {
+        delimiter: ';',
+        required_columns: ['start', 'end']
     })
 };
 
@@ -62,6 +67,9 @@ getter = {
         }
     },
     health: {
+        sleep: {
+            sleep_cycle: require('./health/sleep/sleep_cycle')
+        },
         steps: {
             fitbit: require('./health/steps/fitbit')
         },
@@ -89,6 +97,11 @@ task = {
         }
     },
     health: {
+        sleep: {
+            sleep_cycle: function () {
+                getter.health.sleep.sleep_cycle(storage, source.sleep_cycle);
+            }
+        },
         steps: {
             fitbit: function (filters) {
                 getter.health.steps.fitbit(storage, source.fitbit, filters());

@@ -6,21 +6,15 @@ var mongojs = require('mongojs'),
     config = require('../config/getters');
 
 // sources
-var Weather = require('./sources/weather'),
-    Csv = require('./sources/csv');
+var Weather = require('./sources/weather');
 
 // getters
-var get_weather_data = require('./getters/weather'),
-    get_sleep_cycle_data = require('./getters/sleep_cycle');
+var get_weather_data = require('./getters/weather');
 
 // connections
 var weather = new Weather(config.weather.static_location);
 
 
-var sleep = new Csv(config.sleep_cycle.files, {
-    delimiter: ';',
-    required_columns: ['start', 'end']
-});
 
  // adds an "upserrt" method to a collection object
 (function (coll) {
@@ -70,12 +64,4 @@ module.exports.check_mongo_connection = function () {
  */
 module.exports.get_weather = function () {
     get_weather_data(me.data, weather);
-};
-
-/**
- * parses csv output from my sleep cycle app
- * @function get_sleep_cycle
- */
-module.exports.get_sleep_cycle = function () {
-    get_sleep_cycle_data(me.data, sleep);
 };
