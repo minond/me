@@ -2,7 +2,7 @@
 
 var mongojs = require('mongojs'),
     me = mongojs('me', ['data']),
-    config = require('../config/getters');
+    config = require('../config/application');
 
 // sources
 var Weather = require('./sources/weather');
@@ -11,8 +11,7 @@ var Weather = require('./sources/weather');
 var get_weather_data = require('./getters/weather');
 
 // connections
-var weather = new Weather(config.weather.static_location);
-
+var weather = new Weather(config.user.location);
 
 
  // adds an "upserrt" method to a collection object

@@ -8,7 +8,7 @@ var Github = require('../sources/github'),
     Csv = require('../sources/csv');
 
 // var config = require('../../config/application'),
-var config = require('../../config/getters'),
+var config = require('../../config/application'),
     mongojs = require('mongojs'),
     database = mongojs(config.storage.db, [ config.storage.collection ]),
     storage = database[ config.storage.collection ];
@@ -37,20 +37,20 @@ var config = require('../../config/getters'),
 // api sources
 source = {
     github: new Github(
-        config.github.user,
-        config.github.key
+        config.auth.github.user,
+        config.auth.github.key
     ),
     lastfm: new Lastfm(
-        config.lastfm.user,
-        config.lastfm.key
+        config.auth.lastfm.user,
+        config.auth.lastfm.key
     ),
     fitbit: new Fitbit({
-        consumer_key: config.fitbit.consumer_key,
-        application_secret: config.fitbit.application_secret,
-        user_token: config.fitbit.user_token,
-        user_secret: config.fitbit.user_secret
+        consumer_key: config.auth.fitbit.consumer_key,
+        application_secret: config.auth.fitbit.application_secret,
+        user_token: config.auth.fitbit.user_token,
+        user_secret: config.auth.fitbit.user_secret
     }),
-    sleep_cycle: new Csv(config.sleep_cycle.files, {
+    sleep_cycle: new Csv(config.files.sleep_cycle, {
         delimiter: ';',
         required_columns: ['start', 'end']
     })
