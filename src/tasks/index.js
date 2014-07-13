@@ -2,7 +2,8 @@
 
 var getter, source, task;
 
-var Fitbit = require('../sources/fitbit');
+var Github = require('../sources/github'),
+    Fitbit = require('../sources/fitbit');
 
 // var config = require('../../config/application'),
 var config = require('../../config/getters'),
@@ -33,6 +34,10 @@ var config = require('../../config/getters'),
 
 // api sources
 source = {
+    github: new Github(
+        config.github.user,
+        config.github.key
+    ),
     fitbit: new Fitbit({
         consumer_key: config.fitbit.consumer_key,
         application_secret: config.fitbit.application_secret,
@@ -43,6 +48,11 @@ source = {
 
 // getter functions
 getter = {
+    action: {
+        commits: {
+            github: require('./action/commits/github')
+        }
+    },
     health: {
         steps: {
             fitbit: require('./health/steps/fitbit')
@@ -58,6 +68,13 @@ getter = {
 
 // tasks that can be scheduled/ran
 task = {
+    action: {
+        commits: {
+            github: function (filters) {
+                getter.action.commits.github(storage, source.github, filters());
+            }
+        }
+    },
     health: {
         steps: {
             fitbit: function (filters) {

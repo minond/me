@@ -1,7 +1,7 @@
 'use strict';
 
-var Entry = require('../entry'),
-    log = require('debug')('github:getter'),
+var Entry = require('../../../entry'),
+    log = require('debug')('action:commits:github:getter'),
     mime = require('mime');
 
 /**

@@ -6,20 +6,17 @@ var mongojs = require('mongojs'),
     config = require('../config/getters');
 
 // sources
-var Github = require('./sources/github'),
-    Lastfm = require('./sources/lastfm'),
+var Lastfm = require('./sources/lastfm'),
     Weather = require('./sources/weather'),
     Csv = require('./sources/csv');
 
 // getters
-var get_github_data = require('./getters/github'),
-    get_lastfm_data = require('./getters/lastfm'),
+var get_lastfm_data = require('./getters/lastfm'),
     get_weather_data = require('./getters/weather'),
     get_sleep_cycle_data = require('./getters/sleep_cycle');
 
 // connections
 var lastfm = new Lastfm(config.lastfm.user, config.lastfm.key),
-    github = new Github(config.github.user, config.github.key),
     weather = new Weather(config.weather.static_location);
 
 
@@ -68,15 +65,6 @@ module.exports.check_mongo_connection = function () {
             log('mongo connection up and running');
         }
     });
-};
-
-/**
- * gets code/commit data from github for the past day
- * @function get_code
- * @param {Function} filters
- */
-module.exports.get_code = function (filters) {
-    get_github_data(me.data, github, filters());
 };
 
 /**
