@@ -25,19 +25,11 @@ function date_filters () {
 }
 
 module.exports = function (every, jobs, tasks) {
-    // every.hour(jobs.get_weather);
-
-    /* every.week(jobs.get_sleep_cycle); */
-    // every(12).hours(tasks.task.health.sleep.sleep_cycle);
-
-    /* every(12).hours(jobs.get_activities, [ date_filters ]); */
-    // every(12).hours(tasks.task.health.steps.fitbit, [ date_filters ]);
-    // every(12).hours(tasks.task.health.water.fitbit, [ date_filters ]);
-    // every(12).hours(tasks.task.health.weight.fitbit, [ date_filters ]);
-
-    /* every(12).hours(jobs.get_code, [ date_filters ]); */
-    // every(12).hours(tasks.task.action.commits.github, [ date_filters ]);
-
-    /* every(12).hours(jobs.get_songs, [ date_filters ]); */
-    // every(12).hours(tasks.task.action.songs.lastfm, [ date_filters ]);
+    every.hour(jobs.get_weather);
+    every.week(tasks.task.health.sleep.sleep_cycle);
+    every.day(tasks.task.health.steps.fitbit, [ date_filters ]);
+    every.day(tasks.task.health.water.fitbit, [ date_filters ]);
+    every.day(tasks.task.health.weight.fitbit, [ date_filters ]);
+    every(12).hours(tasks.task.action.commits.github, [ date_filters ]);
+    every(12).hours(tasks.task.action.songs.lastfm, [ date_filters ]);
 };
