@@ -6,18 +6,15 @@ var mongojs = require('mongojs'),
     config = require('../config/getters');
 
 // sources
-var Lastfm = require('./sources/lastfm'),
-    Weather = require('./sources/weather'),
+var Weather = require('./sources/weather'),
     Csv = require('./sources/csv');
 
 // getters
-var get_lastfm_data = require('./getters/lastfm'),
-    get_weather_data = require('./getters/weather'),
+var get_weather_data = require('./getters/weather'),
     get_sleep_cycle_data = require('./getters/sleep_cycle');
 
 // connections
-var lastfm = new Lastfm(config.lastfm.user, config.lastfm.key),
-    weather = new Weather(config.weather.static_location);
+var weather = new Weather(config.weather.static_location);
 
 
 var sleep = new Csv(config.sleep_cycle.files, {
@@ -65,15 +62,6 @@ module.exports.check_mongo_connection = function () {
             log('mongo connection up and running');
         }
     });
-};
-
-/**
- * gets song data from last.fm for the past day
- * @function get_songs
- * @param {Function} filters
- */
-module.exports.get_songs = function (filters) {
-    get_lastfm_data(me.data, lastfm, filters());
 };
 
 /**

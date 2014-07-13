@@ -26,7 +26,6 @@ function date_filters () {
 
 module.exports = function (every, jobs, tasks) {
     // every.hour(jobs.get_weather);
-    // every(12).hours(jobs.get_songs, [ date_filters ]);
     // every.week(jobs.get_sleep_cycle);
 
     /* every(12).hours(jobs.get_activities, [ date_filters ]); */
@@ -36,4 +35,7 @@ module.exports = function (every, jobs, tasks) {
 
     /* every(12).hours(jobs.get_code, [ date_filters ]); */
     // every(12).hours(tasks.task.action.commits.github, [ date_filters ]);
+
+    /* every(12).hours(jobs.get_songs, [ date_filters ]); */
+    every(12).hours(tasks.task.action.songs.lastfm, [ date_filters ]);
 };

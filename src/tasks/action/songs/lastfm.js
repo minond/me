@@ -1,7 +1,7 @@
 'use strict';
 
-var Entry = require('../entry'),
-    log = require('debug')('lastfm:getter');
+var Entry = require('../../../entry'),
+    log = require('debug')('action:songs:lastfm:getter');
 
 /**
  * @function get_lastfm_data

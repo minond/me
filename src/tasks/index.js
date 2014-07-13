@@ -3,6 +3,7 @@
 var getter, source, task;
 
 var Github = require('../sources/github'),
+    Lastfm = require('../sources/lastfm'),
     Fitbit = require('../sources/fitbit');
 
 // var config = require('../../config/application'),
@@ -38,6 +39,10 @@ source = {
         config.github.user,
         config.github.key
     ),
+    lastfm: new Lastfm(
+        config.lastfm.user,
+        config.lastfm.key
+    ),
     fitbit: new Fitbit({
         consumer_key: config.fitbit.consumer_key,
         application_secret: config.fitbit.application_secret,
@@ -51,6 +56,9 @@ getter = {
     action: {
         commits: {
             github: require('./action/commits/github')
+        },
+        songs: {
+            lastfm: require('./action/songs/lastfm')
         }
     },
     health: {
@@ -72,6 +80,11 @@ task = {
         commits: {
             github: function (filters) {
                 getter.action.commits.github(storage, source.github, filters());
+            }
+        },
+        songs: {
+            lastfm: function (filters) {
+                getter.action.songs.lastfm(storage, source.lastfm, filters());
             }
         }
     },
