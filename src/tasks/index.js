@@ -121,6 +121,8 @@ task = {
 };
 
 module.exports = {
+    database: database,
+    storage: storage,
     getter: getter,
     source: source,
     task: task
