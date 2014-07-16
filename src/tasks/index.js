@@ -5,6 +5,7 @@ var getter, source, task;
 var Github = require('../sources/github'),
     Lastfm = require('../sources/lastfm'),
     Fitbit = require('../sources/fitbit'),
+    ForecastIo = require('../sources/forecast_io'),
     Csv = require('../sources/csv');
 
 // var config = require('../../config/application'),
@@ -44,6 +45,9 @@ source = {
         config.auth.lastfm.user,
         config.auth.lastfm.key
     ),
+    forecast_io: new ForecastIo(
+        config.auth.forecast_io.key
+    ),
     fitbit: new Fitbit({
         consumer_key: config.auth.fitbit.consumer_key,
         application_secret: config.auth.fitbit.application_secret,
@@ -58,6 +62,11 @@ source = {
 
 // getter functions
 getter = {
+    environment: {
+        weather: {
+            forecast_io: require('./environment/weather/forecast_io')
+        }
+    },
     action: {
         commits: {
             github: require('./action/commits/github')
@@ -84,6 +93,13 @@ getter = {
 
 // tasks that can be scheduled/ran
 task = {
+    environment: {
+        weather: {
+            forecast_io: function (filters) {
+                getter.environment.weather.forecast_io(storage, source.forecast_io, filters());
+            }
+        }
+    },
     action: {
         commits: {
             github: function (filters) {

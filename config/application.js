@@ -9,6 +9,10 @@ module.exports.auth = {
         key: process.env.GITHUB_TOKEN
     },
 
+    forecast_io: {
+        key: process.env.FORECASTIO_API_KEY
+    },
+
     lastfm: {
         user: process.env.LASTFM_USER,
         key: process.env.LASTFM_API_KEY

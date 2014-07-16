@@ -2,8 +2,7 @@
 
 var every = require('../src/every'),
     tasks = require('../src/tasks/index'),
-    log = require('debug')('worker'),
-    jobs = require('../src/jobs');
+    log = require('debug')('worker');
 
 every.hour(function () {
     // check we're still connected to mongo. kill process on error
@@ -23,4 +22,4 @@ every.hour(function () {
     });
 });
 
-require('../config/schedule')(every, jobs, tasks);
+require('../config/schedule')(every, tasks);

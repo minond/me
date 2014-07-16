@@ -8,10 +8,9 @@
  * @return {Object}
  */
 function date_filters () {
-    var since = new Date(),
+    var since = new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
         until = new Date();
 
-    since.setDate(-2);
     since.setHours(0, 0, 0);
     since.setMilliseconds(0);
 
@@ -24,8 +23,8 @@ function date_filters () {
     };
 }
 
-module.exports = function (every, jobs, tasks) {
-    every.hour(jobs.get_weather);
+module.exports = function (every, tasks) {
+    every(12).hours(tasks.task.environment.weather.forecast_io, [ date_filters ]);
     every.week(tasks.task.health.sleep.sleep_cycle);
     every.day(tasks.task.health.steps.fitbit, [ date_filters ]);
     every.day(tasks.task.health.water.fitbit, [ date_filters ]);
