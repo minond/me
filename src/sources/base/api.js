@@ -17,10 +17,18 @@ var Q = require('q'),
  * @return {Function}
  */
 function resolve (deferred, buffers, log) {
+    var joined;
+
     return function () {
-        var joined = JSON.parse(buffers.join(''));
-        log('resolving request');
-        deferred.resolve(joined);
+        try {
+            joined = buffers.join('');
+            joined = JSON.parse(joined);
+            log('resolving request');
+            deferred.resolve(joined);
+        } catch (err) {
+            log('invalid json response: %s', joined);
+            deferred.reject(err);
+        }
     };
 }
 
