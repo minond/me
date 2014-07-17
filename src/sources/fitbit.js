@@ -1,16 +1,15 @@
 'use strict';
 
 var TMPL_USER = '1/user/-/',
-    TMPL_DATE = '/date/' +
-        '${ date.getFullYear() }-' +
-        '${ date.getMonth() + 1 }-' +
-        '${ date.getDate() }.json';
+    TMPL_DATE = '/date/${ date.toISOString().split("T").shift() }.json';
 
 var URL_BASE = 'https://api.fitbit.com/',
     URL_REQUEST_TOKEN = URL_BASE + 'oauth/request_token',
     URL_ACCESS_TOKEN = URL_BASE + 'oauth/access_token',
     URL_USER_PROFILE = URL_BASE + TMPL_USER + 'profile.json',
     URL_USER_ACTIVITIES = URL_BASE + TMPL_USER + 'activities' + TMPL_DATE,
+    URL_USER_WEIGHT = URL_BASE + TMPL_USER + 'body/log/weight' + TMPL_DATE,
+    URL_USER_FAT = URL_BASE + TMPL_USER + 'body/log/fat' + TMPL_DATE,
     URL_USER_WATER = URL_BASE + TMPL_USER + 'foods/log/water' + TMPL_DATE;
 
 var FITBIT_API_VERSION = '1.0',
@@ -28,6 +27,7 @@ var Api = require('./base/api'),
  *     user_secret: process.env.FITBIT_ACCESS_TOKEN_SECRET
  * }
  *
+ * @link https://wiki.fitbit.com/display/API/Fitbit+Resource+Access+API
  * @constructor
  * @class Fitbit
  * @param {Object} auth
@@ -81,5 +81,21 @@ Fitbit.prototype.activities = Api.request.oauth.get(URL_USER_ACTIVITIES, ['date'
  * @return {Q.Promise}
  */
 Fitbit.prototype.water = Api.request.oauth.get(URL_USER_WATER, ['date']);
+
+/**
+ * @link https://wiki.fitbit.com/display/API/API-Get-Body-Weight
+ * @method weight
+ * @param {Date} date
+ * @return {Q.Promise}
+ */
+Fitbit.prototype.weight = Api.request.oauth.get(URL_USER_WEIGHT, ['date']);
+
+/**
+ * @link https://wiki.fitbit.com/display/API/API-Get-Body-Fat
+ * @method fat
+ * @param {Date} date
+ * @return {Q.Promise}
+ */
+Fitbit.prototype.fat = Api.request.oauth.get(URL_USER_FAT, ['date']);
 
 module.exports = Fitbit;
