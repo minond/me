@@ -21,6 +21,7 @@ body {
     overflow-y: scroll;
     padding: 0 2em;
     width: 65em;
+    word-break: break-word;
 }
 
 hr {
