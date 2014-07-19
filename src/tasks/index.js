@@ -85,6 +85,9 @@ getter = {
         water: {
             fitbit: require('./health/water/fitbit')
         },
+        fat: {
+            fitbit: require('./health/fat/fitbit')
+        },
         weight: {
             fitbit: require('./health/weight/fitbit')
         }
@@ -126,6 +129,11 @@ task = {
         water: {
             fitbit: function (filters) {
                 getter.health.water.fitbit(storage, source.fitbit, filters());
+            }
+        },
+        fat: {
+            fitbit: function (filters) {
+                getter.health.fat.fitbit(storage, source.fitbit, filters());
             }
         },
         weight: {

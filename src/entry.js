@@ -195,6 +195,7 @@ Entry.schema.types = {
  */
 Entry.schema.labels = {
     commit: Entry.schema.types.ACTION,
+    fat: Entry.schema.types.HEALTH,
     sleep: Entry.schema.types.HEALTH,
     song: Entry.schema.types.ACTION,
     steps: Entry.schema.types.HEALTH,

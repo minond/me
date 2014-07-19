@@ -1,10 +1,7 @@
 'use strict';
 
-// kl to lbs
-var KL2LBS = 2.2046;
-
 var Entry = require('../../../entry'),
-    log = require('debug')('health:weight:fitbit:getter');
+    log = require('debug')('health:fat:fitbit:getter');
 
 /**
  * @param {Object} storage
@@ -14,17 +11,14 @@ var Entry = require('../../../entry'),
 module.exports = function (storage, fitbit, filters) {
     var date = filters.since;
 
-    log('getting weight data from fitbit for %s', date);
-    fitbit.weight(date).then(function (res) {
+    log('getting body fat data from fitbit for %s', date);
+    fitbit.fat(date).then(function (res) {
         var entry, date, suid;
 
-        res.weight.forEach(function (log_entry) {
+        res.fat.forEach(function (log_entry) {
             date = new Date(log_entry.date + ' ' + log_entry.time);
             suid = Entry.date2suid(date);
-            entry = new Entry('weight', suid, {
-                weight: Math.ceil(log_entry.weight * KL2LBS),
-                bmi: log_entry.bmi
-            });
+            entry = new Entry('fat', suid, { fat: log_entry.fat });
 
             entry.source = 'Fitbit Aria';
             entry.dtstamp = date;
