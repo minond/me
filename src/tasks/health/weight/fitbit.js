@@ -12,10 +12,11 @@ var Entry = require('../../../entry'),
  * @param {Object} filters
  */
 module.exports = function (storage, fitbit, filters) {
-    var date = filters.since;
+    var since = filters.since,
+        until = filters.until;
 
-    log('getting weight data from fitbit for %s', date);
-    fitbit.weight(date).then(function (res) {
+    log('getting weight data from fitbit from %s to %s', since, until);
+    fitbit.weight(since, until).then(function (res) {
         var entry, date, suid;
 
         res.weight.forEach(function (log_entry) {
