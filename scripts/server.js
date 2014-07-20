@@ -122,7 +122,6 @@ app.use('/public', express.static(DIR_PUBLIC));
 // config
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
-app.set('views', DIR_PUBLIC + 'views');
 
 // development
 app.set('view cache', false);
