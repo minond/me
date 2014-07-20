@@ -6,18 +6,23 @@ var SECOND = 1000,
     DAY = HOUR * 24,
     WEEK = DAY * 7;
 
+var lodash = require('lodash');
+
 /**
  * generates a repeater function
  *
  * @function repeat
  * @param {int} timeout
- * @return {Function}
+ * @return {Function(Function action, Function args, Function, callback)}
  */
 function repeat (timeout) {
-    return function run (action, args) {
-        action.apply(null, args || []);
+    return function run (action, args, callback) {
+        args = args || lodash.noop;
+        callback = callback || lodash.noop;
+
+        callback(action.apply(null, args() || []));
         setTimeout(function () {
-            run(action);
+            run(action, args, callback);
         }, timeout);
     };
 }

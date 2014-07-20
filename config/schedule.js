@@ -4,10 +4,10 @@
  * returns a filter object containing { since, until } keys. used to filter
  * "today" in date range
  *
- * @function date_filters
+ * @function filters
  * @return {Object}
  */
-function date_filters () {
+function filters () {
     var since = new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
         until = new Date();
 
@@ -17,19 +17,19 @@ function date_filters () {
     until.setHours(24, 0, 0);
     until.setMilliseconds(0);
 
-    return {
+    return [{
         since: since,
         until: until
-    };
+    }];
 }
 
 module.exports = function (every, tasks) {
-    every(12).hours(tasks.task.environment.weather.forecast_io, [ date_filters ]);
+    every(12).hours(tasks.task.environment.weather.forecast_io, filters);
     every.week(tasks.task.health.sleep.sleep_cycle);
-    every.day(tasks.task.health.steps.fitbit, [ date_filters ]);
-    every.day(tasks.task.health.water.fitbit, [ date_filters ]);
-    every.day(tasks.task.health.weight.fitbit, [ date_filters ]);
-    every.day(tasks.task.health.fat.fitbit, [ date_filters ]);
-    every(12).hours(tasks.task.action.commits.github, [ date_filters ]);
-    every(12).hours(tasks.task.action.songs.lastfm, [ date_filters ]);
+    every.day(tasks.task.health.steps.fitbit, filters);
+    every.day(tasks.task.health.water.fitbit, filters);
+    every.day(tasks.task.health.weight.fitbit, filters);
+    every.day(tasks.task.health.fat.fitbit, filters);
+    every(12).hours(tasks.task.action.commits.github, filters);
+    every(12).hours(tasks.task.action.songs.lastfm, filters);
 };

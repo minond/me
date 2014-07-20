@@ -99,46 +99,46 @@ task = {
     environment: {
         weather: {
             forecast_io: function (filters) {
-                getter.environment.weather.forecast_io(storage, source.forecast_io, filters());
+                getter.environment.weather.forecast_io(storage, source.forecast_io, filters);
             }
         }
     },
     action: {
         commits: {
             github: function (filters) {
-                getter.action.commits.github(storage, source.github, filters());
+                getter.action.commits.github(storage, source.github, filters);
             }
         },
         songs: {
             lastfm: function (filters) {
-                getter.action.songs.lastfm(storage, source.lastfm, filters());
+                getter.action.songs.lastfm(storage, source.lastfm, filters);
             }
         }
     },
     health: {
         sleep: {
-            sleep_cycle: function () {
-                getter.health.sleep.sleep_cycle(storage, source.sleep_cycle);
+            sleep_cycle: function (filters) {
+                getter.health.sleep.sleep_cycle(storage, source.sleep_cycle, filters);
             }
         },
         steps: {
             fitbit: function (filters) {
-                getter.health.steps.fitbit(storage, source.fitbit, filters());
+                getter.health.steps.fitbit(storage, source.fitbit, filters);
             }
         },
         water: {
             fitbit: function (filters) {
-                getter.health.water.fitbit(storage, source.fitbit, filters());
+                getter.health.water.fitbit(storage, source.fitbit, filters);
             }
         },
         fat: {
             fitbit: function (filters) {
-                getter.health.fat.fitbit(storage, source.fitbit, filters());
+                getter.health.fat.fitbit(storage, source.fitbit, filters);
             }
         },
         weight: {
             fitbit: function (filters) {
-                getter.health.weight.fitbit(storage, source.fitbit, filters());
+                getter.health.weight.fitbit(storage, source.fitbit, filters);
             }
         }
     }
