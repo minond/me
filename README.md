@@ -38,11 +38,13 @@ modify the contents of `config/schedule.js` to your needs.
 * github
 * lastfm
 * sleep cycle app
+* moves app
 * weather information
 
 #### future sources
 * youtube
 * air quality
+* moon/sun location
 * songs metadata
 * anything else
 
