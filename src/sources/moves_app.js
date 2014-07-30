@@ -1,7 +1,6 @@
 'use strict';
 
-var REFRESH_TOKEN_GRANT_TYPE = 'refresh_token',
-    AUTH_TOKEN_GRANT_TYPE = 'authorization_code';
+var REFRESH_TOKEN_GRANT_TYPE = 'refresh_token';
 
 var TMPL_DATE = function (name) {
         return '${ ' + name + '.toISOString()' +
