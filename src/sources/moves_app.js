@@ -14,7 +14,8 @@ var TMPL_DATE_RANGE = 'from=' + TMPL_DATE('since') +
 
 var URL_API_BASE = '/api/1.1/',
     URL_PLACES = URL_API_BASE + 'user/places/daily?' + TMPL_DATE_RANGE,
-    URL_SUMMARY = URL_API_BASE + 'user/summary/daily?' + TMPL_DATE_RANGE;
+    URL_SUMMARY = URL_API_BASE + 'user/summary/daily?' + TMPL_DATE_RANGE,
+    URL_STORYLINE = URL_API_BASE + 'user/storyline/daily?' + TMPL_DATE_RANGE;
 
 var URL_REFRESH_TOKEN_BASE = 'api.moves-app.com',
     URL_REFRESH_TOKEN_PATH = '/oauth/v1/access_token',
@@ -115,6 +116,7 @@ MovesApp.prototype.$options = function (path, fields) {
 
 /**
  * @link https://dev.moves-app.com/docs/api_places
+ * @method places
  * @param {Date} since
  * @param {Date} until
  * @return {Q.Promise}
@@ -123,10 +125,20 @@ MovesApp.prototype.places = Api.request.oauth2.get(URL_PLACES, ['since', 'until'
 
 /**
  * @link https://dev.moves-app.com/docs/v1/api_summaries
+ * @method summary
  * @param {Date} since
  * @param {Date} until
  * @return {Q.Promise}
  */
 MovesApp.prototype.summary = Api.request.oauth2.get(URL_SUMMARY, ['since', 'until']);
+
+/**
+ * @link https://dev.moves-app.com/docs/api_storyline
+ *@method storyline
+ * @param {Date} since
+ * @param {Date} until
+ * @return {Q.Promise}
+ */
+MovesApp.prototype.storyline = Api.request.oauth2.get(URL_STORYLINE, ['since', 'until']);
 
 module.exports = MovesApp;

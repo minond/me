@@ -5,6 +5,7 @@ var getter, source, task;
 var Github = require('../sources/github'),
     Lastfm = require('../sources/lastfm'),
     Fitbit = require('../sources/fitbit'),
+    MovesApp = require('../sources/moves_app'),
     ForecastIo = require('../sources/forecast_io'),
     Csv = require('../sources/csv');
 
@@ -54,6 +55,13 @@ source = {
         user_token: config.auth.fitbit.user_token,
         user_secret: config.auth.fitbit.user_secret
     }),
+    moves_app: new MovesApp({
+        expires_in: config.auth.moves_app.expires_in,
+        consumer_key: config.auth.moves_app.consumer_key,
+        application_secret: config.auth.moves_app.application_secret,
+        access_token: config.auth.moves_app.access_token,
+        refresh_token: config.auth.moves_app.refresh_token
+    }),
     sleep_cycle: new Csv(config.files.sleep_cycle, {
         delimiter: ';',
         required_columns: ['start', 'end']
@@ -62,6 +70,11 @@ source = {
 
 // getter functions
 getter = {
+    location: {
+        place: {
+            moves_app: require('./location/place/moves_app')
+        }
+    },
     environment: {
         weather: {
             forecast_io: require('./environment/weather/forecast_io')
@@ -96,6 +109,13 @@ getter = {
 
 // tasks that can be scheduled/ran
 task = {
+    location: {
+        place: {
+            moves_app: function (filters) {
+                getter.location.place.moves_app(storage, source.moves_app, filters);
+            }
+        }
+    },
     environment: {
         weather: {
             forecast_io: function (filters) {

@@ -32,4 +32,5 @@ module.exports = function (every, tasks) {
     every.day(tasks.task.health.fat.fitbit, filters);
     every(12).hours(tasks.task.action.commits.github, filters);
     every(12).hours(tasks.task.action.songs.lastfm, filters);
+    every(6).hours(tasks.task.location.place.moves_app, filters);
 };

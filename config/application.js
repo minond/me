@@ -18,6 +18,14 @@ module.exports.auth = {
         key: process.env.LASTFM_API_KEY
     },
 
+    moves_app: {
+        expires_in: process.env.MOVES_APP_EXPIRATION_DATE,
+        consumer_key: process.env.MOVES_APP_CLIENT_ID,
+        application_secret: process.env.MOVES_APP_SECRET,
+        access_token: process.env.MOVES_APP_ACCESS_TOKEN,
+        refresh_token: process.env.MOVES_APP_REFRESH_TOKEN
+    },
+
     fitbit: {
         consumer_key: process.env.FITBIT_API_KEY,
         application_secret: process.env.FITBIT_SECRET,

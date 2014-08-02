@@ -1,74 +1,6 @@
 'use strict';
 
 /**
- * {
- *     "schema": {
- *         "label": "a unique identifier of this type of entry",
- *         "type": "type of data",
- *         "source": "where I'm getting this data from",
- *         "dtstamp": "data is on this time"
- *     }
- *
- *     "types": {
- *         "environment": "things around me I cannot control",
- *         "health": "health related actions (sleep, steps, etc.)",
- *         "action": "things I do"
- *     }
- *
- *     "examples": [
- *         {
- *             "label": "weather",
- *             "type": "environment",
- *             "source": "yahoo.com",
- *             "since": "2014...",
- *             "until": "2014...",
- *             "data": {
- *                 "temp": 0,
- *                 "high": 0,
- *                 "low": 0
- *             }
- *         },
- *
- *         {
- *             "label": "listen_music",
- *             "type": "action",
- *             "source": "last.fm",
- *             ""
- *         },
- *
- *         {
- *             "label": "repositories",
- *             "type": "metadata",
- *             "source": "github.com",
- *             "data": {
- *                 "321": {
- *                     "name": "me",
- *                     "full_name": "minond/me",
- *                     "url": "https://..."
- *                 }
- *             }
- *         },
- *
- *         {
- *             "label": "commit",
- *             "type": "action",
- *             "source": "github.com",
- *             "since": "2014...",
- *             "until": "2014...",
- *             "data": {
- *                 "123": {
- *                     "url": "https://...",
- *                     "message": "this is what is did",
- *                     "date": "2014...",
- *                     "repo": "321"
- *                 }
- *             }
- *         }
- *     ]
- * }
- */
-
-/**
  * @constructor
  * @class Entry
  * @throws Error
@@ -145,10 +77,10 @@ Entry.prototype.id = function () {
 Entry.prototype.json = function () {
     return {
         id: this.id(),
-        type: this.type,
-        source: this.source,
         dtstamp: +this.dtstamp,
+        type: this.type,
         label: this.label,
+        source: this.source,
         data: this.data
     };
 };
@@ -171,6 +103,28 @@ Entry.date2suid = function (date) {
 };
 
 /**
+ * generates a suid using a date and time object
+ * @function datetime2suid
+ * @static
+ * @param {Date} date
+ * @return {string}
+ */
+Entry.datetime2suid = function (date) {
+    return [
+        date.getFullYear(),
+        date.getMonth(),
+        date.getFullYear(),
+        date.getDate(),
+        date.getFullYear(),
+        date.getHours(),
+        date.getFullYear(),
+        date.getMinutes(),
+        date.getFullYear(),
+        date.getSeconds()
+    ].join('');
+};
+
+/**
  * @property schema
  * @final
  * @type {Object}
@@ -185,7 +139,8 @@ Entry.schema = {};
 Entry.schema.types = {
     ACTION: 'action',
     ENVIRONMENT: 'environment',
-    HEALTH: 'health'
+    HEALTH: 'health',
+    LOCATION: 'location'
 };
 
 /**
@@ -196,12 +151,35 @@ Entry.schema.types = {
 Entry.schema.labels = {
     commit: Entry.schema.types.ACTION,
     fat: Entry.schema.types.HEALTH,
+    place: Entry.schema.types.LOCATION,
     sleep: Entry.schema.types.HEALTH,
     song: Entry.schema.types.ACTION,
     steps: Entry.schema.types.HEALTH,
     water: Entry.schema.types.HEALTH,
     weather: Entry.schema.types.ENVIRONMENT,
     weight: Entry.schema.types.HEALTH
+};
+
+/**
+ * human-friendly documentation
+ * @final
+ * @type {Object}
+ */
+Entry.schema.documentation = {
+    entry: {
+        id: '{String} a unique id',
+        type: '{Entry.schema.types} the entry\'s group',
+        label: '{Entry.schema.labels} the entry\'s sub-group',
+        source: '{String} where this data was retrieved from (website, app name, etc.)',
+        dtstamp: '{Number} datetime (ms) stamp of the entry',
+        data: '{Object} any information relevant to this entry'
+    },
+    types: {
+        action: 'things I do (write code, listen to a song)',
+        environment: 'things around me I cannot control (the weather, phase of the moon)',
+        health: 'health related actions (how I slept, how many steps I take)',
+        location: 'information about the physical location I in (name of place, how loud)'
+    }
 };
 
 module.exports = Entry;
