@@ -46,6 +46,10 @@ modify the contents of `config/schedule.js` to your needs.
 * air quality
 * moon/sun location
 * songs metadata
+* distance traveled
+* noise levels
+* mood
+* who I am with
 * anything else
 
 ## todo
