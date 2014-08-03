@@ -96,14 +96,22 @@ app.get('/entry/schema', function (req, res) {
  * @apiParam {String} [until] ISO-8601 string
  */
 app.get('/entry/query/:type?/:label?', function (req, res) {
-    query(req, res, me.data, {
-        type: req.params.type,
-        label: req.params.label,
+    var filter = {
         dtstamp: {
             $gte: req.query.since ? moment(req.query.since).valueOf() : 0,
             $lte: req.query.until ? moment(req.query.until).valueOf() : Number.POSITIVE_INFINITY
         }
-    });
+    };
+
+    if (req.params.type) {
+        filter.type = req.params.type;
+    }
+
+    if (req.params.label) {
+        filter.label = req.params.label;
+    }
+
+    query(req, res, me.data, filter);
 });
 
 // index page and static resources
