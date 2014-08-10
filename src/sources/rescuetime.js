@@ -1,7 +1,19 @@
 'use strict';
 
+var TMPL_DATA = '/anapi/data?format=json&version=0&key=${ user.api_key }&',
+    TMPL_QUERY = TMPL_DATA + 'perspective=${ query.perspective }&' +
+        'resolution_time=${ query.resolution_time}&' +
+        'restrict_group=${ query.restrict_group }&' +
+        'restrict_user=${ query.restrict_user }&' +
+        'restrict_begin=${ query.restrict_begin }&' +
+        'restrict_end=${ query.restrict_end }&' +
+        'restrict_kind=${ query.restrict_kind }&' +
+        'restrict_project${ query.restrict_project }&' +
+        'restrict_thing=${ query.restrict_thing }&' +
+        'restrict_thingy=${ query.restrict_thingy }&';
+
 var URL_BASE = 'rescuetime.com',
-    URL_QUERY = '/anapi/data?format=json&key=${ user.api_key }';
+    URL_SELECT = TMPL_QUERY + 'operation=select';
 
 var Api = require('./base/api'),
     lodash = require('lodash'),
@@ -41,7 +53,12 @@ util.inherits(RescueTime, Api);
  */
 RescueTime.prototype.$options = function (path, fields) {
     fields = lodash.defaults(fields || {}, {
-        user: this.$user
+        user: this.$user,
+        query: {
+            perspective: 'rank',
+            resolution_time: 'hour',
+            restrict_kind: 'activity'
+        }
     });
 
     return {
@@ -56,9 +73,9 @@ RescueTime.prototype.$options = function (path, fields) {
 
 /**
  * @link https://www.rescuetime.com/anapi/setup/documentation
- * @method query
+ * @method select
  * @return {Q.Promise}
  */
-RescueTime.prototype.query = Api.request.https.get(URL_QUERY);
+RescueTime.prototype.select = Api.request.https.get(URL_SELECT);
 
 module.exports = RescueTime;
