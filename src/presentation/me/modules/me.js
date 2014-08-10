@@ -1,3 +1,6 @@
 'use strict';
 
-angular.module('me', []);
+/* global _, moment */
+angular.module('me', [])
+    .value('lodash', _)
+    .value('moment', moment);
