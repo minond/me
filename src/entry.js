@@ -150,6 +150,7 @@ Entry.schema.types = {
  */
 Entry.schema.labels = {
     commit: Entry.schema.types.ACTION,
+    computer: Entry.schema.types.ACTION,
     fat: Entry.schema.types.HEALTH,
     place: Entry.schema.types.LOCATION,
     sleep: Entry.schema.types.HEALTH,

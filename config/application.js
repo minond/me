@@ -13,6 +13,10 @@ module.exports.auth = {
         key: process.env.FORECASTIO_API_KEY
     },
 
+    rescuetime: {
+        key: process.env.RESCUETIME_API_KEY
+    },
+
     lastfm: {
         user: process.env.LASTFM_USER,
         key: process.env.LASTFM_API_KEY
