@@ -41,12 +41,16 @@ modify the contents of `config/schedule.js` to your needs.
 * moves app
 * weather information
 
+#### in-process
+* rescuetime activity tracking
+* moves app places
+* moves app travel time
+* moon/sun location
+
 #### future sources
 * youtube
 * air quality
-* moon/sun location
 * songs metadata
-* distance traveled
 * noise levels
 * mood
 * who I am with

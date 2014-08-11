@@ -74,8 +74,9 @@ RescueTime.prototype.$options = function (path, fields) {
 /**
  * @link https://www.rescuetime.com/anapi/setup/documentation
  * @method select
+ * @return {Object} query
  * @return {Q.Promise}
  */
-RescueTime.prototype.select = Api.request.https.get(URL_SELECT);
+RescueTime.prototype.select = Api.request.https.get(URL_SELECT, ['query']);
 
 module.exports = RescueTime;
