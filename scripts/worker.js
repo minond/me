@@ -25,7 +25,7 @@ every.hour(function () {
     });
 });
 
-every(5).minutes(function () {
+every(6).hours(function () {
     log('fetching entry counts');
     lodash.each(Entry.schema.labels, function (type, label) {
         tasks.storage.count({ label: label, type: type }, function (err, count) {
