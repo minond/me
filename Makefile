@@ -5,6 +5,3 @@ dependecies:
 
 install: dependecies
 	npm install
-
-clean::
-	-rm -r build node_modules
