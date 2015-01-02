@@ -5,3 +5,6 @@ dependecies:
 
 install: dependecies
 	npm install
+
+test: js-test
+lint: js-lint

@@ -6,5 +6,8 @@ node_js:
 before_script:
   - make install
 
+after_success:
+  - make js-coveralls
+
 script:
-  - true
+  - make lint js-mocha-coverage
