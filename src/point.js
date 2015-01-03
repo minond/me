@@ -34,12 +34,13 @@ function Point(type, subtype, source, date, id, data) {
  * @function point
  * @param {point.type} type
  * @param {point.subtype} subtype
- * @param {Date} date
  * @param {String} source
- * @param {Object} data
+ * @param {Date} [date]
+ * @param {String} [id]
+ * @param {Object} [data]
  */
-point = function (type, subtype, date, source, data) {
-    return new Point(type, subtype, date, source, data);
+point = function (type, subtype, source, date, id, data) {
+    return new Point(type, subtype, source, date, id, data);
 };
 
 /**
