@@ -9,17 +9,19 @@ var md5 = require('MD5'),
  * @throws Error
  * @param {point.type} type
  * @param {point.subtype} subtype
- * @param {Date} date
  * @param {String} source
- * @param {Object} data
+ * @param {Date} [date]
+ * @param {String} [id]
+ * @param {Object} [data]
  */
-function Point(type, subtype, date, source, data) {
+function Point(type, subtype, source, date, id, data) {
     this.type = type;
     this.subtype = subtype;
     this.source = source;
     this.date = date || new Date();
     this.data = data || {};
-    this.guid = md5(type + subtype + source + this.date);
+    this.id = id || this.date.valueOf();
+    this.guid = md5(type + subtype + source + id + this.date);
 
     if (!(type in point.type)) {
         throw new Error('Invalid type: ' + type);
