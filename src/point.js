@@ -1,6 +1,7 @@
 'use strict';
 
-var point;
+var md5 = require('MD5'),
+    point;
 
 /**
  * @constructor
@@ -16,8 +17,9 @@ function Point(type, subtype, date, source, data) {
     this.type = type;
     this.subtype = subtype;
     this.source = source;
-    this.date = date;
-    this.data = data;
+    this.date = date || new Date();
+    this.data = data || {};
+    this.guid = md5(type + subtype + source + this.date);
 
     if (!(type in point.type)) {
         throw new Error('Invalid type: ' + type);

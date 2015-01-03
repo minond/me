@@ -1,5 +1,7 @@
 -include .scaffold/plugins/js.mk
 
+default:: lint test
+
 dependecies:
 	git submodule update --init
 
