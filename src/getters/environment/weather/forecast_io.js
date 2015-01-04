@@ -1,5 +1,9 @@
 'use strict';
 
+var TYPE = require('../../../point').type.ENVIRONMENT,
+    SUBTYPE = require('../../../point').subtype.WEATHER,
+    SOURCE = 'forecast.io';
+
 var point = require('../../../point'),
     log = require('debug')('getter:environment:weather:forecast_io');
 
@@ -11,12 +15,15 @@ var point = require('../../../point'),
  * @param {Object} config
  */
 module.exports = function (forecast_io, storage, range, config) {
-    range.by('days', function (day) {
-        log('getting weather (%s, %s) data for %s', config.longitude, config.latitude, day);
+    var lon = config.longitude,
+        lat = config.latitude;
 
-        forecast_io.forecast(config.latitude, config.longitude, day.unix()).then(function (forecast) {
+    range.by('days', function (day) {
+        log('getting weather (%s, %s) data for %s', lon, lat, day);
+
+        forecast_io.forecast(lat, lon, day.unix()).then(function (forecast) {
             var data = forecast.daily.data.shift(),
-                entry = point(point.type.ENVIRONMENT, point.subtype.WEATHER, 'forecast.io', day.toDate(), day.unix(), {
+                entry = point(TYPE, SUBTYPE, SOURCE, day.toDate(), day.unix(), {
                     summary: data.summary,
                     icon: data.icon,
                     min: data.temperatureMin,
