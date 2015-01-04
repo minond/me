@@ -2,6 +2,7 @@
   "dependencies": {
     "MD5": "^1.2.1",
     "aping": "git://github.com/minond/aping",
+    "debug": "^2.1.1",
     "mime": "^1.2.11",
     "moment": "^2.8.4",
     "moment-range": "^1.0.5",

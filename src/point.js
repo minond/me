@@ -19,9 +19,9 @@ function Point(type, subtype, source, date, id, data) {
     this.subtype = subtype;
     this.source = source;
     this.date = date || new Date();
-    this.data = data || {};
     this.id = id || this.date.valueOf();
     this.guid = md5(type + subtype + source + id + this.date);
+    this.data = data || {};
 
     if (!(type in point.type)) {
         throw new Error('Invalid type: ' + type);
@@ -56,6 +56,7 @@ point.Point = Point;
  * @type {Object}
  */
 point.type = {
+    ACTION: 'ACTION',
     ENVIRONMENT: 'ENVIRONMENT'
 };
 /**
@@ -64,6 +65,7 @@ point.type = {
  * @type {Object}
  */
 point.subtype = {
+    COMMIT: 'COMMIT',
     WEATHER: 'WEATHER'
 };
 
