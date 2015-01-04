@@ -1,6 +1,7 @@
 'use strict';
 
-var point = require('../../../point');
+var point = require('../../../point'),
+    log = require('debug')('getter:environment:weather:forecast_io');
 
 /**
  * gets a daily summary of the weather from forecast.io
@@ -11,19 +12,25 @@ var point = require('../../../point');
  */
 module.exports = function (forecast_io, storage, range, config) {
     range.by('days', function (day) {
+        log('getting weather (%s, %s) data for %s', config.longitude, config.latitude, day);
+
         forecast_io.forecast(config.latitude, config.longitude, day.unix()).then(function (forecast) {
-            storage.push(point(point.type.ENVIRONMENT, point.subtype.WEATHER, day.toDate(), 'forecast.io', {
-                summary: forecast.summary,
-                icon: forecast.icon,
-                min: forecast.temperatureMin,
-                max: forecast.temperatureMax,
-                wind: forecast.windSpeed,
-                humidity: forecast.humidity,
-                visibility: forecast.visibility,
-                clouds: forecast.cloudCover,
-                pressure: forecast.pressure,
-                ozone: forecast.ozone
-            }));
+            var data = forecast.daily.data.shift(),
+                entry = point(point.type.ENVIRONMENT, point.subtype.WEATHER, 'forecast.io', day.toDate(), day.unix(), {
+                    summary: data.summary,
+                    icon: data.icon,
+                    min: data.temperatureMin,
+                    max: data.temperatureMax,
+                    wind: data.windSpeed,
+                    humidity: data.humidity,
+                    visibility: data.visibility,
+                    clouds: data.cloudCover,
+                    pressure: data.pressure,
+                    ozone: data.ozone
+                });
+
+            log('saving %o', entry);
+            storage.push(entry);
         });
     });
 };
