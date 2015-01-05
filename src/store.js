@@ -38,8 +38,7 @@ function connect(MongoClient, config) {
             return;
         }
 
-        collection = db.collection(config.get('storage.coll'));
-        deferred.resolve(function store(point, cb) {
+        function store(point, cb) {
             log('saving %s', point.guid);
             collection.update({
                 type: point.type,
@@ -54,7 +53,13 @@ function connect(MongoClient, config) {
                 guid: point.guid,
                 data: point.data
             }, UPDATE_OPT, logSave(point, cb));
-        });
+        }
+
+        log('connection made');
+        collection = db.collection(config.get('storage.coll'));
+        store.$collection = collection;
+        store.$db = db;
+        deferred.resolve(store);
     });
 
     return deferred.promise;

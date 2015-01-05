@@ -2,9 +2,13 @@
 
 default:: lint test
 
-test-integration: js-mocha-integration
 test: js-test
 lint: js-lint
+check: lint test test-integration js-mocha-coverage
+
+test-integration: export STORAGE_COLL=points-test
+test-integration: export STORAGE_NAME=me-test
+test-integration: js-mocha-integration
 
 dependecies:
 	git submodule update --init
