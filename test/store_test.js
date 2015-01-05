@@ -6,9 +6,12 @@ describe('Store', function () {
 
     var conn_error,
         conn_database,
-        conn_collection;
+        conn_collection,
+        conn_call_query,
+        conn_call_data;
 
     var assert = require('assert'),
+        point = require('../src/point'),
         connect = require('../src/store');
 
     function check(done, action) {
@@ -22,7 +25,15 @@ describe('Store', function () {
 
     beforeEach(function () {
         conn_error = null;
-        conn_collection = {};
+        conn_call_data = null;
+        conn_call_query = null;
+
+        conn_collection = {
+            update: function (query, point) {
+                conn_call_query = query;
+                conn_call_data = data;
+            }
+        };
 
         conn_database = {
             collection: function () {
@@ -55,6 +66,22 @@ describe('Store', function () {
         connect(Client, config).then(function () {}, function (err) {
             check(done, function () {
                 assert.equal(err, conn_error);
+            });
+        });
+    });
+
+    it('uses a point\'s type, subtype, and guid to run upsers', function () {
+        connect(Client, config).then(function (store) {
+            var entry = point(point.type.ACTION, point.subtype.COMMIT);
+
+            store(point);
+
+            check(done, function () {
+                assert.deepEqual(conn_call_query, {
+                    type: entry.type,
+                    subtype: entry.subtype,
+                    guid: entry.guid
+                });
             });
         });
     });

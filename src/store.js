@@ -7,12 +7,16 @@ var Q = require('q'),
     log = require('debug')('storage'),
     logError = require('debug')('storage:error');
 
-function logSave(point) {
+function logSave(point, cb) {
     return function (err) {
         if (err) {
             logError('error saving %s: %s', point.guid, err.message);
         } else {
             log('successfully saved %s', point.guid);
+        }
+
+        if (cb) {
+            cb(err, point);
         }
     };
 }
@@ -35,7 +39,7 @@ function connect(MongoClient, config) {
         }
 
         collection = db.collection(config.get('storage.coll'));
-        deferred.resolve(function store(point) {
+        deferred.resolve(function store(point, cb) {
             log('saving %s', point.guid);
             collection.update({
                 type: point.type,
@@ -49,7 +53,7 @@ function connect(MongoClient, config) {
                 id: point.id,
                 guid: point.guid,
                 data: point.data
-            }, UPDATE_OPT, logSave(point));
+            }, UPDATE_OPT, logSave(point, cb));
         });
     });
 
