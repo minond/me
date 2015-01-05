@@ -70,12 +70,11 @@ describe('Store', function () {
         });
     });
 
-    it('uses a point\'s type, subtype, and guid to run upsers', function () {
+    it('uses a point\'s type, subtype, and guid to run upsers', function (done) {
         connect(Client, config).then(function (store) {
             var entry = point(point.type.ACTION, point.subtype.COMMIT);
 
-            store(point);
-
+            store(entry);
             check(done, function () {
                 assert.deepEqual(conn_call_query, {
                     type: entry.type,
