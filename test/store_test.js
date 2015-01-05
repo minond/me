@@ -2,11 +2,13 @@
 
 describe('Store', function () {
     var Client,
-        config;
+        config,
+        entry;
 
     var conn_error,
         conn_database,
         conn_collection,
+        conn_call_error,
         conn_call_query,
         conn_call_data;
 
@@ -24,14 +26,21 @@ describe('Store', function () {
     }
 
     beforeEach(function () {
+        entry = point(point.type.ACTION, point.subtype.COMMIT);
+
         conn_error = null;
+        conn_call_error = null;
         conn_call_data = null;
         conn_call_query = null;
 
         conn_collection = {
-            update: function (query, point) {
+            update: function (query, data, opt, cb) {
                 conn_call_query = query;
                 conn_call_data = data;
+
+                if (cb) {
+                    cb(conn_call_error);
+                }
             }
         };
 
@@ -61,7 +70,7 @@ describe('Store', function () {
     });
 
     it('rejects promise with the connection problems', function (done) {
-        conn_error = new Error('testing 123');
+        conn_error = new Error('cannot connect');
 
         connect(Client, config).then(function () {}, function (err) {
             check(done, function () {
@@ -72,14 +81,24 @@ describe('Store', function () {
 
     it('uses a point\'s type, subtype, and guid to run upsers', function (done) {
         connect(Client, config).then(function (store) {
-            var entry = point(point.type.ACTION, point.subtype.COMMIT);
-
             store(entry);
             check(done, function () {
                 assert.deepEqual(conn_call_query, {
                     type: entry.type,
                     subtype: entry.subtype,
                     guid: entry.guid
+                });
+            });
+        });
+    });
+
+    it('passed query errors to update calls', function (done) {
+        conn_call_error = new Error('cannot update');
+
+        connect(Client, config).then(function (store) {
+            store(entry, function (err) {
+                check(done, function () {
+                    assert.equal(err, conn_call_error);
                 });
             });
         });
