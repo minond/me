@@ -15,3 +15,6 @@ dependecies:
 
 install: dependecies
 	npm install
+
+sync:
+	@DEBUG=* node foo

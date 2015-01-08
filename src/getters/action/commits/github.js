@@ -40,16 +40,13 @@ function extract_commit_info(commit) {
 /**
  * download commit info and saves it
  * @param {Github} github
- * @param {Object} storage
+ * @param {Function} store
  * @param {Object} repo object sent back from Github.repos
  */
-function save_commit_info(github, storage, repo) {
+function save_commit_info(github, store, repo) {
     return function (commit) {
         github.commit(repo.name, commit.sha).then(function (commit) {
-            var entry = extract_commit_info(commit);
-
-            log('saving %o', entry);
-            storage.push(entry);
+            store(extract_commit_info(commit));
         });
     };
 }

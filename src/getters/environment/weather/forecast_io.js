@@ -32,11 +32,11 @@ function extract_forecast_info(forecast, day) {
 /**
  * gets a daily summary of the weather from forecast.io
  * @param {ForecastIo} forecast_io
- * @param {Object} storage
+ * @param {Function} store
  * @param {moment.range} range
  * @param {Object} config
  */
-module.exports = function (forecast_io, storage, range, config) {
+module.exports = function (forecast_io, store, range, config) {
     var lon = config.longitude,
         lat = config.latitude;
 
@@ -44,10 +44,7 @@ module.exports = function (forecast_io, storage, range, config) {
         log('getting weather (%s, %s) data for %s', lon, lat, day);
 
         forecast_io.forecast(lat, lon, day.unix()).then(function (forecast) {
-            var entry = extract_forecast_info(forecast, day);
-
-            log('saving %o', entry);
-            storage.push(entry);
+            store(extract_forecast_info(forecast, day));
         });
     });
 };
