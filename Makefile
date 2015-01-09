@@ -17,4 +17,4 @@ install: dependecies
 	npm install
 
 sync:
-	@DEBUG=* node foo
+	@DEBUG=* node sync --since 2014-11-01
