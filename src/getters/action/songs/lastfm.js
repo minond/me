@@ -1,11 +1,12 @@
 'use strict';
 
-var TYPE = require('../../../point').type.ACTION,
-    SUBTYPE = require('../../../point').subtype.SONG,
-    SOURCE = 'lastfm';
+// var TYPE = require('../../../point').type.ACTION,
+//     SUBTYPE = require('../../../point').subtype.SONG,
+//     SOURCE = 'lastfm';
 
-var point = require('../../../point'),
-    log = require('debug')('getter:action:songs:lastfm');
+// var point = require('../../../point'),
+//     log = require('debug')('getter:action:songs:lastfm');
+var log = require('debug')('getter:action:songs:lastfm');
 
 /**
  * gets all scrobble songs from lastfm

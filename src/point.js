@@ -57,7 +57,7 @@ point.Point = Point;
  */
 point.type = {
     ACTION: 'ACTION',
-    ENVIRONMENT: 'ENVIRONMENT',
+    ENVIRONMENT: 'ENVIRONMENT'
 };
 /**
  * @const
@@ -67,7 +67,7 @@ point.type = {
 point.subtype = {
     COMMIT: 'COMMIT',
     SONG: 'SONG',
-    WEATHER: 'WEATHER',
+    WEATHER: 'WEATHER'
 };
 
 module.exports = point;
