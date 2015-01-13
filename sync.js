@@ -5,7 +5,7 @@ var MongoClient = require('mongodb').MongoClient,
     Github = require('aping/client/github');
 
 var moment = require('moment-range'),
-    argv = require('minimist')(process.argv.slice(2), {string: 'since'}),
+    argv = require('minimist')(process.argv.slice(2), {string: ['since', 'until']}),
     config = require('acm'),
     connect = require('./src/store');
 
