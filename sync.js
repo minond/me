@@ -25,24 +25,24 @@ connect(MongoClient, config).then(function (store) {
             switch (source) {
                 case 'github':
                     github_getter(new Github({
-                        identifier: process.env.GITHUB_USER,
-                        token: process.env.GITHUB_TOKEN
+                        identifier: config.identifier,
+                        token: config.token
                     }), store, range);
                     break;
 
                 case 'forecast_io':
                     forecast_io_getter(new ForecastIo({
-                        token: process.env.FORECASTIO_API_KEY
+                        token: config.token
                     }), store, range, {
-                        latitude: process.env.MY_LATITUDE,
-                        longitude: process.env.MY_LONGITUDE
+                        latitude: config.latitude,
+                        longitude: config.longitude
                     });
                     break;
 
                 case 'lastfm':
                     lastfm_getter(new Lastfm({
-                        identifier: process.env.LASTFM_USER,
-                        token: process.env.LASTFM_API_KEY
+                        identifier: config.identifier,
+                        token: config.token
                     }), store, range);
                     break;
 
