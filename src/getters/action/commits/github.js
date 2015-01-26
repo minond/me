@@ -45,20 +45,20 @@ function extract_commit_info(commit) {
  */
 function save_commit_info(github, store, repo) {
     return function (commit) {
-        github.commit(repo.name, commit.sha).then(function (commit) {
-            store(extract_commit_info(commit));
-        });
+        github.commit(repo.name, commit.sha)
+            .then(extract_commit_info)
+            .then(store);
     };
 }
 
 /**
  * downloads commits for a repo within a date range
  * @param {Github} github
- * @param {Object} storage
+ * @param {Function} store
  * @param {Date} since
  * @param {Date} until
  */
-function get_commits_for_repo(github, storage, since, until) {
+function get_commits_for_repo(github, store, since, until) {
     return function (repo) {
         log('downloading commits for %s', repo.name);
 
@@ -75,7 +75,7 @@ function get_commits_for_repo(github, storage, since, until) {
                 }
 
                 log('saving %s commits for %s', commits.length, repo.name);
-                commits.forEach(save_commit_info(github, storage, repo));
+                commits.forEach(save_commit_info(github, store, repo));
             });
         })(1);
     };
@@ -84,10 +84,10 @@ function get_commits_for_repo(github, storage, since, until) {
 /**
  * gets all commits from all repos from github
  * @param {Github} github
- * @param {Object} storage
+ * @param {Function} store
  * @param {moment.range} range
  */
-module.exports = function (github, storage, range) {
+module.exports = function (github, store, range) {
     var dates = range.toDate(),
         until = dates.pop(),
         since = dates.pop();
@@ -95,6 +95,6 @@ module.exports = function (github, storage, range) {
     log('getting commits from %s to %s', since, until);
     github.repos().then(function (repos) {
         log('starting to download commits for %s repos', repos.length);
-        repos.forEach(get_commits_for_repo(github, storage, since, until));
+        repos.forEach(get_commits_for_repo(github, store, since, until));
     });
 };
