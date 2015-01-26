@@ -17,7 +17,7 @@ install: dependecies
 	npm install
 
 sync:
-	@DEBUG=* node sync --since 2015-01-01
+	@DEBUG=* node sync --since 2014-01-01
 
 server:
 	$(npm_bin)/vulpes start

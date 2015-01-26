@@ -18,9 +18,9 @@ function Point(type, subtype, source, date, id, data) {
     this.type = type;
     this.subtype = subtype;
     this.source = source;
-    this.date = date || new Date();
-    this.id = id || this.date.valueOf();
-    this.guid = md5(type + subtype + source + id + this.date);
+    this.date = date ? date.valueOf() : Date.now();
+    this.id = id || this.date;
+    this.guid = md5(type + subtype + source + this.id + this.date);
     this.data = data || {};
 
     if (!(type in point.type)) {
