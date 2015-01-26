@@ -1,12 +1,12 @@
 minond:
-  # github:
-  #   identifier: <%= process.env.GITHUB_USER %>
-  #   token: <%= process.env.GITHUB_TOKEN %>
+  github:
+    identifier: <%= process.env.GITHUB_USER %>
+    token: <%= process.env.GITHUB_TOKEN %>
 
-  # forecast_io:
-  #   token: <%= process.env.FORECASTIO_API_KEY %>
-  #   latitude: <%= process.env.MY_LATITUDE %>
-  #   longitude: <%= process.env.MY_LONGITUDE %>
+  forecast_io:
+    token: <%= process.env.FORECASTIO_API_KEY %>
+    latitude: <%= process.env.MY_LATITUDE %>
+    longitude: <%= process.env.MY_LONGITUDE %>
 
   lastfm:
     identifier: <%= process.env.LASTFM_USER %>
