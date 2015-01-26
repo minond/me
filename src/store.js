@@ -56,7 +56,7 @@ function connect(MongoClient, config) {
         }
 
         log('connection made');
-        collection = db.collection(config.get('storage.coll'));
+        collection = db.collection(config.get('database.coll'));
         store.$collection = collection;
         store.$db = db;
         deferred.resolve(store);
