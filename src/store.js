@@ -23,9 +23,9 @@ function logSave(point, cb) {
 
 function connect(MongoClient, config) {
     var uri = format('mongodb://%s:%s/%s',
-        config.get('storage.host'),
-        config.get('storage.port'),
-        config.get('storage.name'));
+        config.get('database.host'),
+        config.get('database.port'),
+        config.get('database.name'));
 
     var deferred = Q.defer(),
         collection;
