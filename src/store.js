@@ -15,7 +15,7 @@ function logSave(point, cb) {
             log('successfully saved %s', point.guid);
         }
 
-        if (cb) {
+        if (cb && cb instanceof Function) {
             cb(err, point);
         }
     };
